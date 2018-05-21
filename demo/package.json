@@ -1,0 +1,23 @@
+{
+  "name": "onap-sdc",
+  "preferGlobal": true,
+  "version": "1.0.0",
+  "author": "Onap Sdc <onap.sdc@gmail.com>",
+  "description": "Styles and UI components for ONAP SDC",
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "scripts": {
+    "start": "watch-http-server ./ -a 127.0.0.1 -p 2900 -o"
+  },
+  "dependencies": {
+    "express": "~3.4.7",
+    "http-server": "^0.9.0"
+  },
+  "devDependencies": {
+    "node-sass": "^4.5.2",
+    "nodemon": "^1.11.0",
+    "watch-http-server": "^0.7.6"
+  }
+}

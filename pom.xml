@@ -1,0 +1,162 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.onap.sdc</groupId>
+	<artifactId>onap-ui</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>onap-ui</name>
+
+	<properties>
+		<nexus.proxy>https://nexus.onap.org</nexus.proxy>
+        <sitePath>/content/sites/site/org/openecomp/sdc/${project.version}</sitePath>
+        <staging.profile.id>176c31dfe190a</staging.profile.id>
+        <maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
+  
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+                <executions>
+                    <execution>
+                        <id>clean.dist.folder</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/node_modules</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>${basedir}/dist</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+			</plugin>
+		
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.6</version>
+
+                <configuration>
+        			<installDirectory>${project.parent.basedir}</installDirectory>
+   				</configuration>
+
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v8.11.1</nodeVersion>
+                            <npmVersion>5.6.0</npmVersion>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                    	<id>npm set progress off</id>
+                    	<goals>
+                    		<goal>npm</goal>
+                    	</goals>
+                    	<configuration>
+                    		<arguments>set progress=false</arguments>
+                    	</configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+					
+					<execution>
+                        <id>npm test</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run test</arguments>
+                        </configuration>
+                    </execution>
+					
+					<execution>
+                        <id>npm run build-gh-pages</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build-gh-pages</arguments>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+		</plugins>
+	</build>
+	
+	<repositories>
+        <repository>
+            <id>ecomp-releases</id>
+            <name>Release Repository</name>
+            <url>${nexus.proxy}/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>ecomp-snapshots</id>
+            <name>Snapshots Repository</name>
+            <url>${nexus.proxy}/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>ecomp-public</id>
+            <name>Public Repository</name>
+            <url>${nexus.proxy}/content/repositories/public/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>ecomp-releases</id>
+            <name>Release Repository</name>
+            <url>${nexus.proxy}/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ecomp-snapshots</id>
+            <name>Snapshot Repository</name>
+            <url>${nexus.proxy}/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <site>
+            <id>ecomp-site</id>
+            <url>dav:${nexus.proxy}${sitePath}</url>
+        </site>
+    </distributionManagement>
+
+</project>
+

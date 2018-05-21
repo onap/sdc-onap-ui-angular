@@ -1,0 +1,163 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button Button - Default - Gray 1`] = `
+<button
+  className="sdc-button sdc-button__primary   "
+  color="gray"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Default - Negative 1`] = `
+<button
+  className="sdc-button sdc-button__primary   "
+  color="negative"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Default - Positive 1`] = `
+<button
+  className="sdc-button sdc-button__primary   "
+  color="positive"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Default - Primary - Disabled 1`] = `
+<button
+  className="sdc-button sdc-button__primary   "
+  disabled={true}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Default - Primary 1`] = `
+<button
+  className="sdc-button sdc-button__primary   "
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Default - Warning 1`] = `
+<button
+  className="sdc-button sdc-button__primary   "
+  color="warning"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Default - White 1`] = `
+<button
+  className="sdc-button sdc-button__primary   "
+  color="white"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Link - Primary - Disabled 1`] = `
+<button
+  className="sdc-button sdc-button__link   "
+  color="primary"
+  disabled={true}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Link - Primary - With Icon 1`] = `
+<button
+  className="sdc-button sdc-button__link   plus"
+  color="primary"
+  disabled={false}
+  onClick={undefined}
+>
+  <div
+    className="svg-icon-wrapper     right"
+    disabled={undefined}
+    onClick={undefined}
+  >
+    <svg />
+    <span
+      className="svg-icon-label "
+    >
+      Click Me
+    </span>
+  </div>
+</button>
+`;
+
+exports[`Button Button - Link - Primary 1`] = `
+<button
+  className="sdc-button sdc-button__link   "
+  color="primary"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Outline - Gray 1`] = `
+<button
+  className="sdc-button sdc-button__outline   "
+  color="gray"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Outline - Negative 1`] = `
+<button
+  className="sdc-button sdc-button__outline   "
+  color="negative"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Outline - Positive 1`] = `
+<button
+  className="sdc-button sdc-button__outline   "
+  color="positive"
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;
+
+exports[`Button Button - Outline - Primary 1`] = `
+<button
+  className="sdc-button sdc-button__outline   "
+  disabled={false}
+  onClick={undefined}
+>
+  Click Me
+</button>
+`;

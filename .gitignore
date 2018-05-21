@@ -1,0 +1,31 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+/dist
+/tmp
+/lib
+/build
+/node_modules
+npm-debug.log*
+Thumbs.db
+
+# IDEA files
+.idea
+.vscode
+.history
+package-lock.json
+# build files
+lib
+css
+demo/gen
+.out
+src/react/utils/iconMap.js
+
+#coverage files
+coverage
+
+#ignore generated icons files
+src/common/icons-map.ts
+src/common/icons-map.json
+
+/node/*
+/yarn.lock
