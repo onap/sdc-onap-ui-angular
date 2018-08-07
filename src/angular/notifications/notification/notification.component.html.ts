@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div class="sdc-notification" (click)="fadeOut()">
     <div class="sdc-notification__wrapper {{'type-' + notificationSetting.type}}" [class.fade-out__animated]="fade" (animationend)="destroyMe()">
         <div *ngIf="!notificationSetting.hasCustomContent" class="sdc-notification__content">

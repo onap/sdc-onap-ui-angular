@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div class="search-bar-container">
     <sdc-input class="search-bar-input"
                [label]="label"

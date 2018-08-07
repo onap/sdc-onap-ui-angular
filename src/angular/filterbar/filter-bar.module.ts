@@ -7,8 +7,10 @@ import { FormElementsModule } from "../form-elements/form-elements.module";
     declarations: [
         FilterBarComponent
     ],
-    imports: [CommonModule,
-        FormElementsModule],
+    imports: [
+        CommonModule,
+        FormElementsModule
+    ],
     exports: [
         FilterBarComponent
     ],

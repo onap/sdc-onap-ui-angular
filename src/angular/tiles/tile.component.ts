@@ -1,5 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
-import template from "./tile.component.html";
+import { template } from "./tile.component.html";
 
 @Component({
     selector: "sdc-tile",

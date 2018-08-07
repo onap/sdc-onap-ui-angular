@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div class="sdc-tag-cloud-new-item-field" [ngClass]="{'not-empty': newTagItem}">
     <sdc-input [label]="label"
                [disabled]="(isViewOnly===true)"

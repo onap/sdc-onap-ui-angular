@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <ul class="sdc-tabs-list" role="tablist">
     <li *ngFor="let tab of tabs" class="sdc-tab" role="tab" (click)="selectTab(tab)" [class.sdc-tab-active]="tab.active">
         <span *ngIf="tab.title">{{tab.title}}</span>

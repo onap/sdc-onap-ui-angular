@@ -3,7 +3,6 @@ import { CheckboxComponent } from "./checkbox.component";
 import { AnimationDirectivesModule } from "../../animations/animation-directives.module";
 import { FormsModule } from "@angular/forms";
 
-
 describe("Checbox Tests", ()=>{
     let component: CheckboxComponent;
     beforeEach(async(() => {

@@ -14,8 +14,9 @@ import { Component, Input } from "@angular/core";
         </div>
 `
 })
+
 export class InnerNotifContent {
 
-    @Input() notifyTitle:string;
-    @Input() notifyText:string;
+    @Input() notifyTitle: string;
+    @Input() notifyText: string;
 }

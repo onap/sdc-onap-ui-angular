@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div class="search-bar-container" [ngClass]="{'not-empty': searchQuery}">
     <sdc-input class="sdc-input-wrapper"
                [label]="label"

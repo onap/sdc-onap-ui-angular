@@ -1,31 +1,40 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# compiled output
 /dist
 /tmp
-/lib
-/build
+/out-tsc
+/.storybook-out
+
+# dependencies
 /node_modules
-npm-debug.log*
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
 Thumbs.db
-
-# IDEA files
-.idea
-.vscode
-.history
-package-lock.json
-# build files
-lib
-css
-demo/gen
-.out
-src/react/utils/iconMap.js
-
-#coverage files
-coverage
-
-#ignore generated icons files
-src/common/icons-map.ts
-src/common/icons-map.json
-
-/node/*
-/yarn.lock

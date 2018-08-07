@@ -1,7 +1,4 @@
-import { Component, Input, Output, ContentChildren, SimpleChanges, QueryList, EventEmitter, OnChanges, AfterContentInit } from '@angular/core';
-import { FormsModule } from "@angular/forms";
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { PopupMenuItemComponent } from './popup-menu-item.component';
 import { PopupMenuListComponent } from './popup-menu-list.component';
 
 describe('Popup Menu', () => {

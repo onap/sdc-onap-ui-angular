@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div class="sdc-accordion" [ngClass]="customCSSClass">
     <div class="sdc-accordion-header" (click)="toggleAccordion()" [ngClass]="{'arrow-right': arrowDirection === accordionArrowDirection.right}">
         <div class="svg-icon-wrapper bottom" [ngClass]="{'down': open}">

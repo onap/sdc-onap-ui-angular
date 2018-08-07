@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig-sitebook.json",
+  "exclude": [
+    "../src/angular/test.ts",
+    "../src/angular/**/*.spec.ts"
+  ],
+  "include": [
+    "../src/angular/**/*"
+  ]
+}

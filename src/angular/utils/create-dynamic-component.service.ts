@@ -17,8 +17,7 @@ export class CreateDynamicComponentService {
      * @memberOf InjectionService
      */
     private getRootViewContainer(): ComponentRef<any> {
-        const rootComponents = this.applicationRef['_rootComponents']; // Angular2
-        // const rootComponents = this.applicationRef['components']; // Angular5
+        const rootComponents = this.applicationRef['components'];
         if (rootComponents.length) {
             return rootComponents[0];
         }

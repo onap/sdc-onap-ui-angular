@@ -1,14 +1,10 @@
 import { Input, Component, ContentChildren, EventEmitter, Output, QueryList, SimpleChanges, HostBinding, AfterContentInit } from "@angular/core";
-import { AbstractControl, FormControl } from "@angular/forms";
-import { Subscribable } from "rxjs/Observable";
-import { AnonymousSubscription } from "rxjs/Subscription";
-import { IValidator } from './validators/validator.interface';
 import { ValidatorComponent } from './validators/base.validator.component';
 import { RegexValidatorComponent } from './validators/regex.validator.component';
 import { RequiredValidatorComponent } from './validators/required.validator.component';
 import { ValidatableComponent } from './validatable.component';
 import { CustomValidatorComponent } from './validators/custom.validator.component';
-import template from "./validation.component.html";
+import { template } from "./validation.component.html";
 
 @Component({
     selector: 'sdc-validation',
@@ -47,6 +43,9 @@ export class ValidationComponent implements AfterContentInit {
             },
             (error) => console.log('Validation subscribe error')
         );
+        // init validateElement.valid.
+        const value = this.validateElement.getValue();
+        this.validateElement.notifier.next(value);
     }
 
     public validate = (): boolean => {

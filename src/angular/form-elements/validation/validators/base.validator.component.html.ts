@@ -1,6 +1,6 @@
-export default `
+export const template = `
 <svg-icon-label
-    *ngIf="!isValid"
+    *ngIf="!isValid && !disabled"
     name="alert-triangle"
     mode="error"
     size="small"

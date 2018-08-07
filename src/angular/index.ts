@@ -15,7 +15,9 @@ import { SearchBarModule } from "./searchbar/search-bar.module";
 import { TooltipModule } from "./tooltip/tooltip.module";
 import { TagCloudModule } from './tag-cloud/tag-cloud.module';
 import { TabsModule } from "./tabs/tabs.module";
+import { LoaderModule } from "./loader/loader.module";
 import { AccordionModule } from "./accordion/accordion.module";
+import { MultilineEllipsisModule } from "./multiline-ellipsis/multiline-ellipsis.module";
 
 @NgModule({
     imports: [
@@ -35,7 +37,9 @@ import { AccordionModule } from "./accordion/accordion.module";
         SvgIconModule,
         TagCloudModule,
         TabsModule,
-        AccordionModule
+        LoaderModule,
+        AccordionModule,
+        MultilineEllipsisModule
     ],
     exports: [
         AnimationDirectivesModule,
@@ -54,15 +58,32 @@ import { AccordionModule } from "./accordion/accordion.module";
         SvgIconModule,
         TagCloudModule,
         TabsModule,
-        AccordionModule
+        LoaderModule,
+        AccordionModule,
+        MultilineEllipsisModule
     ]
 })
-export class SdcUiComponentsModule {
-}
-
-import * as SdcUiComponents from './components';
-import * as SdcUiCommon from './common/index';
+export class SdcUiComponentsModule {}
 
 export { SdcUiComponentsNg1Module } from './ng1.module';
+
+import * as SdcUiComponents from './components';
+import * as SdcUiServices from './services';
+import * as SdcUiCommon from './common/index';
+
 export { SdcUiComponents };
+export { SdcUiServices };
 export { SdcUiCommon };
+
+
+
+
+// let components = SdcUiComponents;
+// let services = SdcUiServices;
+// let common = SdcUiCommon
+
+// export const SdcUi = {
+//     components,
+//     services,
+//     common
+// };

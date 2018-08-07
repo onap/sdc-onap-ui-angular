@@ -1,14 +1,9 @@
-import { OnInit, animate, Component, EventEmitter, Input, Output, state, style, transition, trigger } from '@angular/core';
-import { FilterBarComponent } from "../filterbar/filter-bar.component";
-import { URLSearchParams, Http } from "@angular/http";
+import { OnInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AutocompletePipe } from "./autocomplete.pipe";
-import template from "./autocomplete.component.html";
+import { template } from "./autocomplete.component.html";
+import { HttpClient, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/map';
-
-export interface IDataSchema {
-    key: string;
-    value: string;
-}
 
 @Component({
     selector: 'sdc-autocomplete',
@@ -25,10 +20,9 @@ export interface IDataSchema {
             })),
             transition('* => *', animate('200ms'))
         ]),
-    ],
-    providers: [AutocompletePipe]
+    ]
 })
-export class SearchWithAutoCompleteComponent implements OnInit {
+export class AutoCompleteComponent implements OnInit {
     @Input() public data: any[] = [];
     @Input() public dataSchema: IDataSchema;
     @Input() public dataUrl: string;
@@ -36,12 +30,12 @@ export class SearchWithAutoCompleteComponent implements OnInit {
     @Input() public placeholder: string;
     @Output() public itemSelected: EventEmitter<any> = new EventEmitter<any>();
 
-    private searchQuery: string;
+    public searchQuery: string;
     private complexData: any[] = [];
-    private autoCompleteResults: any[] = [];
+    public autoCompleteResults: any[] = [];
     private isItemSelected: boolean = false;
 
-    public constructor(private http: Http, private autocompletePipe: AutocompletePipe) {
+    public constructor(private http: HttpClient, private autocompletePipe: AutocompletePipe) {
     }
 
     public ngOnInit(): void {
@@ -82,18 +76,18 @@ export class SearchWithAutoCompleteComponent implements OnInit {
         this.itemSelected.emit(selectedItem.key);
     }
 
-    private onSearchQueryChanged = (searchText: string): void => {
+    public onSearchQueryChanged = (searchText: string): void => {
         if (searchText !== this.searchQuery) {
             this.searchQuery = searchText;
             if (!this.searchQuery) {
                 this.onClearSearch();
             } else {
                 if (this.dataUrl) {
-                    const params: URLSearchParams = new URLSearchParams();
-                    params.set('searchQuery', this.searchQuery);
-                    this.http.get(this.dataUrl, {search: params})
+                    const params = new HttpParams();
+                    params.append('searchQuery', this.searchQuery);
+                    this.http.get(this.dataUrl, {params})
                         .map((response) => {
-                            this.data = response.json();
+                            this.data = JSON.parse(JSON.stringify(response));
                             this.handleLocalData();
                             this.autoCompleteResults = this.complexData;
                         }).subscribe();
@@ -111,4 +105,9 @@ export class SearchWithAutoCompleteComponent implements OnInit {
             this.itemSelected.emit();
         }
     }
+}
+
+export interface IDataSchema {
+    key: string;
+    value: string;
 }

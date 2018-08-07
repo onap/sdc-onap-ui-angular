@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, HostBinding } from "@angular/core";
-import template from "./tag-item.component.html";
+import { template } from "./tag-item.component.html";
 
 @Component({
     selector: 'sdc-tag-item',

@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div class="sdc-autocomplete-container" [ngClass]="{'results-shown': autoCompleteResults.length}">
     <sdc-filter-bar
         [placeholder]="placeholder"

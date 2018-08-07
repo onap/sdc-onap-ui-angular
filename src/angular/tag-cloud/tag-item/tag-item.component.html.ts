@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div class="tag-item" [ngClass]="{'view-only':isViewOnly}">
     <span>{{text}}</span>
     <span class="delete-item" *ngIf="!isViewOnly" (click)="clickOnDelete.emit(index)">

@@ -1,6 +1,6 @@
 import { Component, Input, Output, ViewEncapsulation, EventEmitter, HostBinding } from "@angular/core";
 import { Direction, IOptionGroup, IRadioButtonModel } from "./radio-button.model";
-import template from './radio-buttons-group.component.html';
+import { template } from './radio-buttons-group.component.html';
 
 @Component({
     selector: 'sdc-radio-group',
@@ -43,9 +43,11 @@ export class RadioGroupComponent {
     }
 
     private isOptionExists(value) {
-        const exist = this.options.items.find((item: IRadioButtonModel) => {
+        // Support ES5
+        // const exist = this.options.items.find((item: IRadioButtonModel) => {
+        const exist = this.options.items.filter((item: IRadioButtonModel) => {
             return item.value === value;
-        });
+        })[0];
         return exist !== undefined;
     }
 

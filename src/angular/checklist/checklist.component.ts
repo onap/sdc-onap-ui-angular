@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { ChecklistModel } from "./models/Checklist";
 import { ChecklistItemModel } from "./models/ChecklistItem";
-import template from "./checklist.component.html";
+import { template } from "./checklist.component.html";
 
 @Component({
     selector: 'sdc-checklist',
@@ -15,7 +15,7 @@ export class ChecklistComponent  {
         // push/pop the checkbox value
         if (checkbox.isChecked) {
             currentChecklistModel.selectedValues.push(checkbox.value);
-        }else {
+        } else {
             const index: number = currentChecklistModel.selectedValues.indexOf(checkbox.value);
             currentChecklistModel.selectedValues.splice(index, 1);
         }

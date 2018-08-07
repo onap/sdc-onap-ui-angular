@@ -1,3 +1,3 @@
-export default `
-<ng-content *ngIf="!disabled"></ng-content>
+export const template = `
+<ng-content *ngIf="!disabled && (validateElement && validateElement.dirty)"></ng-content>
 `;

@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div class="sdc-dropdown" #dropDownWrapper
     [ngClass]="{
     'headless': type === cIDropDownTypes.Headless,

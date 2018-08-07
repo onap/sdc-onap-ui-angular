@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Mode } from './../../common/enums';
-import template from "./tab.component.html";
+import { template } from "./tab.component.html";
 
 @Component({
   selector: 'sdc-tab',

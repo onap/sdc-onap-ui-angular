@@ -1,4 +1,4 @@
-export default `
+export const template = `
 <div *ngFor="let checkbox of checklistModel.checkboxes" #currentCheckbox>
     <div class="checkbox-item">
         <sdc-checkbox [label]="checkbox.label"

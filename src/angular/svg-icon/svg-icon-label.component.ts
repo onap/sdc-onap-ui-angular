@@ -1,8 +1,8 @@
 import { Component, Input } from "@angular/core";
 import { SvgIconComponent } from './svg-icon.component';
-import { Mode, Size, Placement } from "../common/enums";
+import { Placement } from "../common/enums";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import template from './svg-icon-label.component.html';
+import { template } from './svg-icon-label.component.html';
 
 @Component({
     selector: 'svg-icon-label',

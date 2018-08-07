@@ -1,10 +1,6 @@
-/**
- * Created by M.S.BIT on 26/04/2018.
- */
-
-import {Component, Input, Output, EventEmitter} from "@angular/core";
-import {Placement} from "../common/enums";
-import template from './accordion.component.html';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Placement } from "../common/enums";
+import { template } from './accordion.component.html';
 
 @Component({
     selector: 'sdc-accordion',

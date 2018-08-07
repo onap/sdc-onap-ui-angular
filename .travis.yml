@@ -1,12 +1,10 @@
 language: node_js
 node_js:
-- 6
+- 8
 install: npm install
 script:
-- npm run build-common
-- npm test
 - npm run build
-- npm run build-gh-pages
+- npm run storybook:build
 deploy:
   - provider: npm
     email: onap.sdc@gmail.com
@@ -14,18 +12,11 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-      repo: onap-sdc/sdc-ui
+      repo: onap-sdc/onap-ui-angular
   - provider: pages
-    repo: onap-sdc/sdc-ui
+    repo: onap-sdc/onap-ui-angular
     skip_cleanup: true
     github_token: $GITHUB_TOKEN
-    local_dir: .out
+    local_dir: .storybook-out
     on:
       branch: master
-  - provider: pages
-    skip_cleanup: true
-    github_token: $GITHUB_TOKEN
-    local_dir: .out
-    on:
-      all_branches: true
-      condition: $DEPLOY = 1
