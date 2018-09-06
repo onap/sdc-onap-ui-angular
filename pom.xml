@@ -1,0 +1,163 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.openecomp.sdc</groupId>
+  <artifactId>onap-ui-angular</artifactId>
+  <version>5.1.17</version>
+  <packaging>pom</packaging>
+  <name>ONAP UI Angular</name>
+
+  <properties>
+    <nexus.proxy>https://nexus.onap.org</nexus.proxy>
+    <staging.profile.id>176c31dfe190a</staging.profile.id>
+
+    <sonar.typescript.node>node/node</sonar.typescript.node>
+    <sonar.sources>src/angular</sonar.sources>
+    <sonar.inclusions>src/angular/**/*.ts</sonar.inclusions>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>clean dist folder</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${project.basedir}/dist</directory>
+                </fileset>
+                <fileset>
+                  <directory>${project.basedir}/.storybook-out</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.6</version>
+        <configuration>
+          <installDirectory>${project.basedir}</installDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v8.11.4</nodeVersion>
+              <npmVersion>5.6.0</npmVersion>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>npm set progress off</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>set progress=false</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+
+          <!--<execution>
+            <id>npm tslint src</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run lint:src</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>npm tslint storybook</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run lint:stories</arguments>
+            </configuration>
+          </execution>-->
+
+          <execution>
+            <id>npm run src build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run build</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>npm run storybook build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>run storybook:build</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>3.0.2</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.7</version>
+        <extensions>true</extensions>
+        <configuration>
+          <nexusUrl>${nexus.proxy}</nexusUrl>
+          <stagingProfileId>${staging.profile.id}</stagingProfileId>
+          <serverId>ecomp-staging</serverId>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>ecomp-releases</id>
+      <name>Release Repository</name>
+      <url>${nexus.proxy}/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>ecomp-snapshots</id>
+      <name>Snapshot Repository</name>
+      <url>${nexus.proxy}/content/repositories/snapshots/</url>
+    </snapshotRepository>
+    <site>
+      <id>ecomp-site</id>
+      <url>dav:${nexus.proxy}${sitePath}</url>
+    </site>
+  </distributionManagement>
+</project>
