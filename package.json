@@ -18,8 +18,8 @@
     "storybook": "start-storybook -p 6007",
     "storybook:prebuild": "npm run test:generate-output",
     "storybook:build": "build-storybook -c .storybook -o .storybook-out ",
-    "lint:src": "npm run tslint 'src/angular/**/*.ts'",
-    "lint:stories": "npm run tslint 'stories/**/*.ts'"
+    "lint:src": "node_modules/.bin/tslint 'src/angular/**/*.ts'",
+    "lint:stories": "node_modules/.bin/tslint 'stories/**/*.ts'"
   },
   "dependencies": {
     "@angular/animations": "^6.0.3",
@@ -68,6 +68,7 @@
     "ts-loader": "^4.4.2",
     "ts-node": "7.0.0",
     "tslint": "^5.2.0",
+    "tslint-sonarts": "^1.7.0",
     "typescript": "2.7.2",
     "webpack": "4.12.0",
     "webpack-angular-externals": "^1.0.2",
