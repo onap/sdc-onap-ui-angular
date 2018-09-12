@@ -14,7 +14,7 @@
 
     <sonar.typescript.node>node/node</sonar.typescript.node>
     <sonar.sources>src/angular</sonar.sources>
-    <!--<sonar.inclusions>src/angular/**/*.ts</sonar.inclusions>-->
+    <sonar.exclusions>src/angular/**/*.ts</sonar.exclusions>
   </properties>
 
   <build>
