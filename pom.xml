@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.openecomp.sdc</groupId>
+  <groupId>org.onap.sdc</groupId>
   <artifactId>onap-ui-angular</artifactId>
   <version>5.1.17</version>
   <packaging>pom</packaging>
@@ -14,7 +14,7 @@
 
     <sonar.typescript.node>node/node</sonar.typescript.node>
     <sonar.sources>src/angular</sonar.sources>
-    <sonar.inclusions>src/angular/**/*.ts</sonar.inclusions>
+    <sonar.exclusions>src/angular/**/*.ts</sonar.exclusions>
   </properties>
 
   <build>
