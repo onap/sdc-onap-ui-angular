@@ -2,9 +2,9 @@
   "name": "onap-ui-angular",
   "version": "5.1.17",
   "author": "d2",
+  "license": "Apache-2.0",
   "private": false,
   "main": "dist/index.umd.js",
-  "license": "MIT",
   "scripts": {
     "e2e": "ng e2e --no-webdriver-update",
     "ng": "ng",
