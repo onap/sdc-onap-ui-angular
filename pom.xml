@@ -10,7 +10,6 @@
 
   <properties>
     <nexus.proxy>https://nexus.onap.org</nexus.proxy>
-    <staging.profile.id>176c31dfe190a</staging.profile.id>
 
     <sonar.typescript.node>node/node</sonar.typescript.node>
     <sonar.sources>src/angular</sonar.sources>
@@ -127,18 +126,6 @@
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
         <version>3.0.2</version>
-      </plugin>
-
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.7</version>
-        <extensions>true</extensions>
-        <configuration>
-          <nexusUrl>${nexus.proxy}</nexusUrl>
-          <stagingProfileId>${staging.profile.id}</stagingProfileId>
-          <serverId>ecomp-staging</serverId>
-        </configuration>
       </plugin>
 
     </plugins>
