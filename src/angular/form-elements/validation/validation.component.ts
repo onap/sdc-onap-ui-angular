@@ -61,9 +61,10 @@ export class ValidationComponent implements AfterContentInit {
          * all validators with same type, and return boolean result true in case all validations passed.
          */
         const validationResult: boolean = this.supportedValidator.reduce((sum, validatorName) => {
-            const response: boolean = validatorName.reduce((_sum, validator) => {
-                return _sum && validator.validate(value);
-            }, true);
+            const reducer = (_sum, validator) => {
+                                            return _sum && validator.validate(value);
+                                        };
+            const response: boolean = validatorName.reduce(reducer, true);
             return sum && response;
         }, true);
 

@@ -15,8 +15,8 @@ export class MultilineEllipsisComponent implements OnChanges, AfterViewChecked {
 	@Input() public className: string;
 	@Output() public hasEllipsisChanged: EventEmitter<boolean>;
 
-	@ViewChild('multilineEllipsisContainer') public elmContainer: ElementRef;
-	@ViewChild('multilineEllipsisContent') public elmContent: ElementRef;
+	@ViewChild('multilineEllipsisContainer', {static: true}) public elmContainer: ElementRef;
+	@ViewChild('multilineEllipsisContent', {static: true}) public elmContent: ElementRef;
 
 	public stylesContainer: { [key: string]: string };
 	public stylesContent: { [key: string]: string };

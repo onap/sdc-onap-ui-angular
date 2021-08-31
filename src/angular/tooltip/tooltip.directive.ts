@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, OnInit, Input, Renderer, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, HostListener, OnInit, Input, Renderer2, TemplateRef } from '@angular/core';
 import { TooltipTemplateComponent } from './tooltip-template.component';
 import { CreateDynamicComponentService } from '../utils/create-dynamic-component.service';
 
@@ -31,7 +31,7 @@ export class TooltipDirective implements OnInit {
     constructor(
         private elementRef: ElementRef,
         private service: CreateDynamicComponentService,
-        private renderer: Renderer) {
+        private renderer: Renderer2) {
 
         this.elementRef.nativeElement.title = "";
     }
@@ -121,8 +121,8 @@ export class TooltipDirective implements OnInit {
 
         this.setAdditionalCssClass(placementSuffix);
 
-        this.renderer.setElementStyle(this.tooltip, topStyle, tooltipPos.top + pixel);
-        this.renderer.setElementStyle(this.tooltip, leftStyle, tooltipPos.left + pixel);
+        this.renderer.setStyle(this.tooltip, topStyle, tooltipPos.top + pixel);
+        this.renderer.setStyle(this.tooltip, leftStyle, tooltipPos.left + pixel);
     }
 
     private setAdditionalCssClass(placementSuffix: string) {
@@ -134,10 +134,10 @@ export class TooltipDirective implements OnInit {
     }
 
     private setCssClass(isAdd: boolean, suffix: string = '') {
-        this.renderer.setElementClass(this.tooltip, this.cssClass + suffix, isAdd);
+        isAdd ? this.renderer.addClass(this.tooltip, this.cssClass + suffix) : this.renderer.removeClass(this.tooltip, this.cssClass + suffix)
 
         if (this.customCssClass) {
-            this.renderer.setElementClass(this.tooltip, this.customCssClass + suffix, isAdd);
+            isAdd ? this.renderer.addClass(this.tooltip, this.customCssClass + suffix) : this.renderer.removeClass(this.tooltip, this.customCssClass + suffix)
         }
     }
 

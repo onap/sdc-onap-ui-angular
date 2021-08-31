@@ -1,4 +1,4 @@
-import { Component, Input, ViewContainerRef, ViewChild, ComponentRef, Renderer, OnInit } from '@angular/core';
+import { Component, Input, ViewContainerRef, ViewChild, ComponentRef, Renderer2, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ModalButtonComponent } from './modal-button.component';
 import { LowerCasePipe } from '@angular/common';
@@ -32,14 +32,14 @@ export class ModalComponent implements OnInit {
     @Input() testId: string;
     @Input() instanceRef: ComponentRef<ModalComponent>; // the component ref is injected to the component in order to destroy the componet from itself
 
-    @ViewChild('modalCloseButton')
+    @ViewChild('modalCloseButton', {static: true})
     set refCloseButton(_modalCloseButton: ModalCloseButtonComponent) {
         this.modalCloseButton = _modalCloseButton;
     }
 
     modalVisible: boolean;
     // Allows for custom component as body instead of simple message.
-    @ViewChild('dynamicContentContainer', { read: ViewContainerRef }) dynamicContentContainer: ViewContainerRef;
+    @ViewChild('dynamicContentContainer', {static: true, read: ViewContainerRef }) dynamicContentContainer: ViewContainerRef;
     innerModalContent: ComponentRef<any>;
 
     public calculatedTestId: string;
@@ -74,7 +74,7 @@ export class ModalComponent implements OnInit {
     10.2819037 10.118669,10.6091913 L12.0005728,12.491095 L20.4282286,4.06343925 C20.7555162,3.73615164 21.2464476,3.73615164 21.5737352,4.06343925 Z"></path></svg>`;
     private noSvg = ``;
 
-    constructor(private renderer: Renderer,
+    constructor(private renderer: Renderer2,
         private domSanitizer: DomSanitizer,
         private lowerCasePipe: LowerCasePipe
     ) {
@@ -144,7 +144,7 @@ export class ModalComponent implements OnInit {
     }
 
     public hoverAnimation(evn: MouseEvent) {
-        this.renderer.setElementClass(evn.target as HTMLElement, 'sdc-ripple-click__animated', true);
+        this.renderer.addClass(evn.target as HTMLElement, 'sdc-ripple-click__animated');
         // evn.taregt.classList.add('sdc-ripple-click__animated');
     }
 

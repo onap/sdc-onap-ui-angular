@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, forwardRef, OnChanges, SimpleChanges, OnInit, ElementRef, ViewChild, AfterViewInit, HostListener, Renderer } from '@angular/core';
+import { Component, EventEmitter, Input, Output, forwardRef, OnChanges, SimpleChanges, OnInit, ElementRef, ViewChild, AfterViewInit, HostListener, Renderer2 } from '@angular/core';
 import { IDropDownOption, DropDownOptionType, DropDownTypes } from "./dropdown-models";
 import { ValidatableComponent } from './../validation/validatable.component';
 import { template } from './dropdown.component.html';
@@ -18,14 +18,14 @@ export class DropDownComponent extends ValidatableComponent implements OnChanges
     @Input() maxHeight: number;
     @Input() selectedOption: IDropDownOption;
     @Input() type: DropDownTypes = DropDownTypes.Regular;
-    @ViewChild('dropDownWrapper') dropDownWrapper: ElementRef;
-    @ViewChild('optionsContainerElement') optionsContainerElement: ElementRef;
+    @ViewChild('dropDownWrapper', {static: true}) dropDownWrapper: ElementRef;
+    @ViewChild('optionsContainerElement', {static: true}) optionsContainerElement: ElementRef;
     @HostListener('document:click', ['$event']) onClick(e) {
         this.onClickDocument(e);
     }
 
     public bottomVisible = true;
-    private myRenderer: Renderer;
+    private myRenderer: Renderer2;
 
     // Drop-down show/hide flag. default is false (closed)
     public show = false;
@@ -47,7 +47,7 @@ export class DropDownComponent extends ValidatableComponent implements OnChanges
     public allOptions: IDropDownOption[];
     public filterValue: string;
 
-    constructor(public renderer: Renderer) {
+    constructor(public renderer: Renderer2) {
         super();
         this.myRenderer = renderer;
         this.maxHeight = 244;
@@ -86,7 +86,7 @@ export class DropDownComponent extends ValidatableComponent implements OnChanges
         if (event) { event.stopPropagation(); }
         if (this.type === DropDownTypes.Headless) {
             // Hide the options when in headless mode and user select option.
-            this.myRenderer.setElementStyle(this.dropDownWrapper.nativeElement, 'display', 'none');
+            this.myRenderer.setStyle(this.dropDownWrapper.nativeElement, 'display', 'none');
         }
         if (typeof option === 'string' && this.isSelectable(option)) {
             this.setSelected(option);
@@ -99,7 +99,7 @@ export class DropDownComponent extends ValidatableComponent implements OnChanges
         if (event) { event.stopPropagation(); }
         if (this.type === DropDownTypes.Headless) {
             // Show the options when in headless mode.
-            this.myRenderer.setElementStyle(this.dropDownWrapper.nativeElement, 'display', 'block');
+            this.myRenderer.setStyle(this.dropDownWrapper.nativeElement, 'display', 'block');
         }
         if (this.disabled) { return; }
         this.animation_init = true;

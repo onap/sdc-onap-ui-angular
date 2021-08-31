@@ -12,7 +12,7 @@ export class NotificationComponent implements OnInit {
 
     @Input() notificationSetting: NotificationSettings;
     @Output() destroyComponent = new EventEmitter<any>();
-    @ViewChild("dynamicContentContainer", { read: ViewContainerRef }) contentContainer: ViewContainerRef;
+    @ViewChild("dynamicContentContainer", {static: true, read: ViewContainerRef }) contentContainer: ViewContainerRef;
     public fade: boolean = false;
 
     constructor(private createDynamicComponentService: CreateDynamicComponentService) {

@@ -2,7 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from "@angular/forms";
 import { ValidatableComponent } from "../validation/validatable.component";
 import 'rxjs/add/operator/debounceTime';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class BaseTextElementComponent extends ValidatableComponent implements OnInit {
 
     @Output('valueChange') public baseEmitter: EventEmitter<any> = new EventEmitter<any>();

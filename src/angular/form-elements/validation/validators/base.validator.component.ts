@@ -1,5 +1,7 @@
 import { Input, Component, ContentChildren, EventEmitter, Output, QueryList, SimpleChanges, HostBinding } from "@angular/core";
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export abstract class ValidatorComponent {
 
     @Input() public message: any;
