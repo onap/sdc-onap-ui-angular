@@ -19,7 +19,9 @@
     "storybook:prebuild": "npm run test:generate-output",
     "storybook:build": "build-storybook -c .storybook -o .storybook-out ",
     "lint:src": "node_modules/.bin/tslint 'src/angular/**/*.ts'",
-    "lint:stories": "node_modules/.bin/tslint 'stories/**/*.ts'"
+    "lint:stories": "node_modules/.bin/tslint 'stories/**/*.ts'",
+    "test": "jest --config jest.config.js",
+    "test:watch": "jest --config jest.config.js --watch"
   },
   "dependencies": {
     "@angular/animations": "^6.0.3",
@@ -53,13 +55,15 @@
     "@storybook/addon-storysource": "4.0.0-alpha.9",
     "@storybook/addons": "4.0.0-alpha.9",
     "@storybook/angular": "4.0.0-alpha.9",
-    "@types/jest": "^22.2.3",
+    "@types/jest": "^23.3.1",
     "@types/node": "~9.6.20",
     "awesome-typescript-loader": "^3.1.3",
     "babel-core": "^6.26.3",
     "css-loader": "^0.28.11",
     "delete": "^1.1.0",
     "global": "^4.3.2",
+    "jest": "^23.6.0",
+    "jest-preset-angular": "^6.0.1",
     "node-sass": "^4.9.2",
     "onap-ui-common": "^1.0.57",
     "rimraf": "^2.6.2",
