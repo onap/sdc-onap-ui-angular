@@ -4,7 +4,7 @@
 
   <groupId>org.onap.sdc</groupId>
   <artifactId>onap-ui-angular</artifactId>
-  <version>5.1.17</version>
+  <version>5.5.0</version>
   <packaging>pom</packaging>
   <name>ONAP UI Angular</name>
 
