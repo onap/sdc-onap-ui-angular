@@ -15,7 +15,8 @@
     "stripInternal": true,
     "skipLibCheck": true,
     "outDir": "dist/components",
-    "rootDir": "./src/angular"
+    "rootDir": "./src/angular",
+    "types": []
   },
   "files": [
     "./src/angular/index.ts"
