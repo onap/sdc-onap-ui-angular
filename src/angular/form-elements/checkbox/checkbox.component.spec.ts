@@ -28,9 +28,10 @@ describe("Checbox Tests", ()=>{
         expect(component.checked).toEqual(true);
     }));
 
-    it( "If disabled not toggled"), async(()=>{
+    it( "If disabled not toggled", async(()=>{
+        component.checked = false;
         component.disabled = true;
         component.toggleState(true);
         expect(component.checked).toEqual(false);
-    });
+    }));
 });
