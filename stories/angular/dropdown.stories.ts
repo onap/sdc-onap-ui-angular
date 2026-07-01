@@ -3,10 +3,12 @@ import { withKnobs, text, number, boolean, array, select, color, date, button, o
 import { withNotes } from '@storybook/addon-notes';
 import { action, configureActions } from '@storybook/addon-actions';
 import { moduleMetadata } from '@storybook/angular';
-import { CheckboxComponent, DropDownComponent, SvgIconComponent } from '../../src/angular/components';
-import { RippleClickAnimationDirective } from '../../src/angular/animations/ripple-click.animation.directive';
+import { RippleClickAnimationDirective } from '../../src/angular/utils/animations/ripple-click.animation.directive';
 import { DropDownTypes, IDropDownOption, DropDownOptionType } from '../../src/angular/form-elements/dropdown/dropdown-models';
 import { DropDownTriggerDirective } from '../../src/angular/form-elements/dropdown/dropdown-trigger.directive';
+import {DropdownModule} from "../../src/angular/form-elements/dropdown/dropdown.module";
+import {InputModule} from "../../src/angular/form-elements/text-elements/input/input.module";
+import {CommonDirectiveModule} from "../../src/angular/utils/common-directive.module";
 
 const dropdownTypes = Object.values(DropDownTypes);
 const options1: IDropDownOption[] = [
@@ -93,12 +95,11 @@ storiesOf('Form elements|Dropdown', module)
   .addDecorator(
     moduleMetadata({
       declarations: [
-        DropDownComponent,
-        RippleClickAnimationDirective,
-        SvgIconComponent,
-        DropDownTriggerDirective
       ],
       imports: [
+        DropdownModule,
+        InputModule,
+        CommonDirectiveModule
       ]
     })
   )
@@ -107,28 +108,27 @@ storiesOf('Form elements|Dropdown', module)
       const _placeHolder = text('placeHolder', 'Sample placeholder');
       const _disabled = boolean('disabled', false);
       const _options = object('options', options1);
-      const _testId = text('testId', 'smalpe-test-id');
+      const _testId = text('testId', 'dropdown-test-id');
       const _required = boolean('required', false);
-      const _maxHeight = number('maxHeight', 20);
+      const _size = number('size', 'medium');
       const _selectedOption = object('selectedOption', {});
-      const _type = select('type', dropdownTypes, DropDownTypes.Regular);
       const _onChange = text('*(onChange)', 'Event throws when dropdown changed, see in Action logger tab.');
 
       return {
         props: {
             onChange: action('Dropdown value changed '),
-            _label, _placeHolder, _disabled, _required, _testId, _options, _maxHeight, _selectedOption, _type
+            _label, _placeHolder, _disabled, _required, _testId, _options, _size, _selectedOption
         },
         template: `
         <sdc-dropdown 
             [label]="_label" 
             [placeHolder]="_placeHolder"
-            [type]="_type"
             [disabled]="_disabled"
             [required]="_required"
-            [maxHeight]="_maxHeight"
+            [size]="_size"
             [options]="_options" 
             [selectedOption]="_selectedOption"
+            [testId]="_testId"
             (changed)="onChange($event)"
             >
         </sdc-dropdown>
@@ -145,26 +145,24 @@ storiesOf('Form elements|Dropdown', module)
     const _placeHolder = text('placeHolder', 'Sample placeholder');
     const _disabled = boolean('disabled', false);
     const _options = object('options', options2);
-    const _testId = text('testId', 'smalpe-test-id');
+    const _testId = text('testId', 'dropdown-test-id');
     const _required = boolean('required', false);
-    const _maxHeight = number('maxHeight', 20);
+    const _size = number('size', 20);
     const _selectedOption = object('selectedOption', {});
-    const _type = select('type', dropdownTypes, DropDownTypes.Regular);
     const _onChange = text('*(onChange)', 'Event throws when dropdown changed, see in Action logger tab.');
 
     return {
       props: {
           onChange: action('Dropdown value changed '),
-          _label, _placeHolder, _disabled, _required, _testId, _options, _maxHeight, _selectedOption, _type
+          _label, _placeHolder, _disabled, _required, _testId, _options, _size, _selectedOption
       },
       template: `
       <sdc-dropdown 
           [label]="_label" 
           [placeHolder]="_placeHolder"
-          [type]="_type"
           [disabled]="_disabled"
           [required]="_required"
-          [maxHeight]="_maxHeight"
+          [size]="_size"
           [options]="_options" 
           [selectedOption]="_selectedOption"
           (changed)="onChange($event)"
@@ -182,28 +180,27 @@ storiesOf('Form elements|Dropdown', module)
     const _label = text('label', 'Simple dropdown');
     const _placeHolder = text('placeHolder', 'Sample placeholder');
     const _disabled = boolean('disabled', false);
-    const _options = object('options', options2);
-    const _testId = text('testId', 'smalpe-test-id');
+    const _options2 = array('options', ['option1', 'opt2', 'opt3']);
+    // const _options = object('options', options2);
+    const _testId = text('testId', 'dropdown-test-id');
     const _required = boolean('required', false);
-    const _maxHeight = number('maxHeight', 20);
+    const _size = number('size', 20);
     const _selectedOption = object('selectedOption', { label: 'Second Option Label', value: 'secondOptionValue'});
-    const _type = select('type', dropdownTypes, DropDownTypes.Regular);
     const _onChange = text('*(onChange)', 'Event throws when dropdown changed, see in Action logger tab.');
 
     return {
       props: {
           onChange: action('Dropdown value changed '),
-          _label, _placeHolder, _disabled, _required, _testId, _options, _maxHeight, _selectedOption, _type
+          _label, _placeHolder, _disabled, _required, _testId, _options2, _size, _selectedOption
       },
       template: `
       <sdc-dropdown 
           [label]="_label" 
           [placeHolder]="_placeHolder"
-          [type]="_type"
           [disabled]="_disabled"
           [required]="_required"
-          [maxHeight]="_maxHeight"
-          [options]="_options" 
+          [size]="_size"
+          [options]="_options2" 
           [selectedOption]="_selectedOption"
           (changed)="onChange($event)"
           >
@@ -213,85 +210,6 @@ storiesOf('Form elements|Dropdown', module)
   },
   { notes: `<h2>Checkbox</h2>
           Full example of checkbox with groups pre selected option.
-          Use the KNOBS tab to change values.`
-  }
-)
-.add('Headless mode', () => {
-    const _label = text('label', 'Simple dropdown');
-    const _placeHolder = text('placeHolder', 'Sample placeholder');
-    const _disabled = boolean('disabled', false);
-    const _options = object('options', options1);
-    const _testId = text('testId', 'smalpe-test-id');
-    const _required = boolean('required', false);
-    const _maxHeight = number('maxHeight', 20);
-    const _selectedOption = object('selectedOption', {});
-    const _type = select('type', dropdownTypes, DropDownTypes.Headless);
-    const _onChange = text('*(onChange)', 'Event throws when dropdown changed, see in Action logger tab.');
-
-    return {
-      props: {
-          onChange: action('Dropdown value changed '),
-          _label, _placeHolder, _disabled, _required, _testId, _options, _maxHeight, _selectedOption, _type
-      },
-      template: `
-      <button SdcDropdownTrigger [dropDown]="dropDown1">Click to toggle!</button>
-      <sdc-dropdown
-          #dropDown1
-          [label]="_label" 
-          [placeHolder]="_placeHolder"
-          [type]="_type"
-          [disabled]="_disabled"
-          [required]="_required"
-          [maxHeight]="_maxHeight"
-          [options]="_options" 
-          [selectedOption]="_selectedOption"
-          (changed)="onChange($event)"
-          >
-      </sdc-dropdown>
-      `
-    }
-  },
-  { notes: `<h2>Checkbox</h2>
-          Full example of checkbox (headless mode).
-          Use the KNOBS tab to change values.`
-  }
-)
-.add('Insert text (auto)', () => {
-    const _label = text('label', 'Simple dropdown');
-    const _placeHolder = text('placeHolder', 'Sample placeholder');
-    const _disabled = boolean('disabled', false);
-    const _options = object('options', options1);
-    const _testId = text('testId', 'smalpe-test-id');
-    const _required = boolean('required', false);
-    const _maxHeight = number('maxHeight', 20);
-    const _selectedOption = object('selectedOption', {});
-    const _type = select('type', dropdownTypes, DropDownTypes.Auto);
-    const _onChange = text('*(onChange)', 'Event throws when dropdown changed, see in Action logger tab.');
-
-    return {
-      props: {
-          onChange: action('Dropdown value changed '),
-          _label, _placeHolder, _disabled, _required, _testId, _options, _maxHeight, _selectedOption, _type
-      },
-      template: `
-      <sdc-dropdown
-          #dropDown1
-          [label]="_label" 
-          [placeHolder]="_placeHolder"
-          [type]="_type"
-          [disabled]="_disabled"
-          [required]="_required"
-          [maxHeight]="_maxHeight"
-          [options]="_options" 
-          [selectedOption]="_selectedOption"
-          (changed)="onChange($event)"
-          >
-      </sdc-dropdown>
-      `
-    }
-  },
-  { notes: `<h2>Checkbox</h2>
-          Full example of checkbox (auto mode).
           Use the KNOBS tab to change values.`
   }
 )

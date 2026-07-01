@@ -1,14 +1,18 @@
 export const template = `
-<div class="sdc-autocomplete-container" [ngClass]="{'results-shown': autoCompleteResults.length}">
+<div class="sdc-autocomplete-container" [attr.data-tests-id]="testId" (clickOutside)="onClickOutside()">
     <sdc-filter-bar
-        [placeholder]="placeholder"
+        [placeHolder]="placeholder"
         [label]="label"
-        [searchQuery]="searchQuery"
-        (searchQueryChange)="onSearchQueryChanged($event)">
+        [value]="searchQuery"
+        [testId]="testId + '-filter-bar'"
+        (valueChange)="onSearchQueryChanged($event)"
+        [defaultRightIcon]="defaultRightIcon"
+        [disabled]="disabled"
+        (rightIconClicked)="onRightItemClicked()"
+        (click)="onClickInside()"
+        >
     </sdc-filter-bar>
-    <ul class="autocomplete-results" [@displayResultsAnimation]="autoCompleteResults.length ?'true':'false'">
-        <li *ngFor="let item of autoCompleteResults"
-        (click)="onItemSelected(item)">{{item.value}}</li>
-    </ul>
+
+    <dropdown-results *ngIf="autoCompleteResults.length && !clickOutside" [options]="autoCompleteResults" (onItemSelected)="onItemSelected($event)"></dropdown-results>
 </div>
 `;

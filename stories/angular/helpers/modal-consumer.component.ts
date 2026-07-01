@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, ComponentRef} from "@angular/core";
 import { ModalService } from "../../../src/angular/modals/modal.service";
-import { IModalConfig, ModalType, ModalSize } from "../../../src/angular/modals/models/modal-config";
+import { IModalConfig, ModalType, ModalSize, TitleIconDetails } from "../../../src/angular/modals/models/modal-config";
 import { ModalButtonComponent } from './../../../src/angular/modals/modal-button.component';
 import { Placement, ButtonType } from "../../../src/angular/common/enums";
 import { ModalComponent } from "../../../src/angular/components";
@@ -9,7 +9,7 @@ import {ButtonComponent} from "../../../src/angular/buttons/button.component"
 
 const MODAL_CONTENT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed risus nisl, egestas vitae erat non,' +
 'pulvinar lacinia libero. Integer pulvinar pellentesque accumsan. Sed hendrerit lacus eu tempus pharetra';
-
+const titleIcon: TitleIconDetails = {iconName: 'info-circle-o', iconMode: 'white', iconSize: 'small'}
 @Component({
     selector: 'modal-consumer',
     template: `<sdc-button [text]="'View Modal'" (click)="openModal()"></sdc-button>`
@@ -40,9 +40,20 @@ export class ModalConsumerComponent {
         this.modalService.openErrorModal("Error modal title", MODAL_CONTENT, 'errorModalTestId');
     }
 
+    private openErrorDetailModal = (): void => {
+        const additionalDetails =  {
+            "Error Code" : "SVC131232", 
+            "Status Code": "404",
+            "Transaction ID": "TransID123"
+        };
+
+        this.modalService.openErrorDetailModal("Error modal title", "Error modal content", "errorDetailTestID", additionalDetails);
+    }
+
     private openSuccessModal = (): void => {
         this.modalService.openSuccessModal("Success modal title", MODAL_CONTENT, 'successModalTestId');
     }
+
 
     private openInfoModalWithCustomButtons = (): void => {
         const buttons = [
@@ -85,6 +96,17 @@ export class ModalConsumerComponent {
                     ]
         } as IModalConfig;
         this.customModal1 = this.modalService.openCustomModal(modalConfig, ModalInnerContent, {name: "Sample Content"});
+    }
+
+    private openCustomModalWithTitleIcon = (): void => {
+      const modalConfig = {
+          size: ModalSize.medium,
+          title: 'Modal title',
+          titleIcon: titleIcon,
+          type: ModalType.custom,
+          testId: 'sampleTestIdModal1',
+      } as IModalConfig;
+      this.customModal1 = this.modalService.openCustomModal(modalConfig, ModalInnerContent, {name: "Sample Content"});
     }
 
     private customModalOnSave1 = (): void => {

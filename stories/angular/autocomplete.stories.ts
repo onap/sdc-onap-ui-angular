@@ -4,9 +4,11 @@ import { withNotes } from '@storybook/addon-notes';
 import { action, configureActions } from '@storybook/addon-actions';
 import { moduleMetadata } from '@storybook/angular';
 import { AutoCompleteComponent, AutocompletePipe } from '../../src/angular/components';
-import { FilterBarModule } from '../../src/angular/filterbar/filter-bar.module';
+import { SearchModule } from '../../src/angular/search/search.module';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {DropdownResultsModule} from "../../src/angular/form-elements/dropdown/dropdown-result/dropdown-result.module";
+import {CommonDirectiveModule} from "../../src/angular/utils/common-directive.module";
 
 storiesOf('AutoComplete', module)
   .addDecorator(withKnobs)
@@ -17,8 +19,10 @@ storiesOf('AutoComplete', module)
           AutoCompleteComponent
       ],
       imports: [
-          FilterBarModule,
-          BrowserAnimationsModule
+          SearchModule,
+          BrowserAnimationsModule,
+          DropdownResultsModule,
+          CommonDirectiveModule
       ],
       providers: [
           HttpClient, HttpHandler, AutocompletePipe
@@ -32,11 +36,17 @@ storiesOf('AutoComplete', module)
     const _placeholder = text('placeholder', 'Simple data');
     const _data = array('data', sampleData, ',');
     const _event = text('(itemSelected)', 'Event thrown when item selected');
+    const _eventClear = text('(clearInput)', 'Event thrown when input cleared');
+    const _value = text('initialValue', 'red');
+    const _defaultRightIcon = text('defaultRightIcon', 'search-o');
+    const _disabled = boolean('disabled', false);
+    const _testId = text('testId', 'autocomplete-test-id');
 
       return {
         props: {
             itemSelected: action('Item was selected '),
-            _label, _placeholder, _data, _event
+            clearInput: action('Input was cleared '),
+            _label, _placeholder, _data, _event, _value, _testId, _defaultRightIcon, _disabled, _eventClear
         },
         template: `
         <div class='storybook-component-wrapper'>
@@ -45,7 +55,12 @@ storiesOf('AutoComplete', module)
                 [placeholder]="_placeholder"
                 [label]="_label"
                 [data]="_data"
+                [initialValue]="_value"
+                [testId]="_testId"
                 (itemSelected)="itemSelected($event)"
+                [defaultRightIcon]="_defaultRightIcon"
+                [disabled]="_disabled"
+                (clearInput)="clearInput($event)"
                 >
             </sdc-autocomplete>
         </div>
@@ -65,7 +80,7 @@ storiesOf('AutoComplete', module)
         {id: 'whiteId', color: 'white'},
         {id: 'blackId', color: 'black'}
     ];
-    const sampleSchema = {key: 'id', value: 'color'};
+    const sampleSchema = {label: 'id', value: 'color'};
 
     const _label = text('label', 'Complex data (Object)');
     const _placeholder = text('placeholder', 'Complex data');
@@ -95,7 +110,7 @@ storiesOf('AutoComplete', module)
         `
     }
 ).add('Backend data', () => {
-    const sampleSchema = {key: 'id', value: 'color'};
+    const sampleSchema = {label: 'id', value: 'color'};
 
     const _label = text('label', 'Complex data (Object)');
     const _placeholder = text('placeholder', 'Complex data');

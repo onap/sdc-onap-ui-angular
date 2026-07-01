@@ -5,6 +5,7 @@ import { RequiredValidatorComponent } from './validators/required.validator.comp
 import { ValidatableComponent } from './validatable.component';
 import { CustomValidatorComponent } from './validators/custom.validator.component';
 import { template } from "./validation.component.html";
+import { LengthValidatorComponent } from "./validators/length.validator.component";
 
 @Component({
     selector: 'sdc-validation',
@@ -14,12 +15,14 @@ export class ValidationComponent implements AfterContentInit {
 
     @Input() public validateElement: ValidatableComponent;
     @Input() public disabled: boolean;
+    @Input() public testId: string;
     @Output() public validityChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
     @HostBinding('class') classes;
 
     // @ContentChildren does not recieve type any or IValidator or ValidatorComponent, so need to create @ContentChildren for each validator type.
     @ContentChildren(RegexValidatorComponent) public regexValidator: QueryList<ValidatorComponent>;
     @ContentChildren(RequiredValidatorComponent) public requireValidator: QueryList<ValidatorComponent>;
+    @ContentChildren(LengthValidatorComponent) public lengthValidator: QueryList<ValidatorComponent>;
     @ContentChildren(CustomValidatorComponent) public customValidator: QueryList<ValidatorComponent>;
 
     private supportedValidator: Array<QueryList<ValidatorComponent>>;
@@ -33,6 +36,7 @@ export class ValidationComponent implements AfterContentInit {
         this.supportedValidator = [
             this.regexValidator,
             this.requireValidator,
+            this.lengthValidator,
             this.customValidator
         ];
 
@@ -46,6 +50,9 @@ export class ValidationComponent implements AfterContentInit {
         // init validateElement.valid.
         const value = this.validateElement.getValue();
         this.validateElement.notifier.next(value);
+        if (this.validateElement){
+          this.validateElement.validationActive = true;
+        }
     }
 
     public validate = (): boolean => {

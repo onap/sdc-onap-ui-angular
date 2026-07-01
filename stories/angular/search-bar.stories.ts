@@ -5,6 +5,7 @@ import { action, configureActions } from '@storybook/addon-actions';
 import { moduleMetadata } from '@storybook/angular';
 import { SearchBarComponent, InputComponent } from '../../src/angular/components';
 import { FormElementsModule } from '../../src/angular/form-elements/form-elements.module';
+import {SearchModule} from "../../src/angular/search/search.module";
 
 storiesOf('Form elements|Searchbar', module)
   .addDecorator(withKnobs)
@@ -12,32 +13,33 @@ storiesOf('Form elements|Searchbar', module)
   .addDecorator(
     moduleMetadata({
       declarations: [
-        SearchBarComponent
+
       ],
       imports: [
+          SearchModule,
           FormElementsModule
       ]
     })
   )
   .add('Searchbar', () => {
-      const _label = text('label', 'Searchbar label');
       const _placeholder = text('placeholder', 'Searchbar placeholder');
       const _debounceTime = number('debounceTime', 200);
       const _searchQuery = text('searchQuery', '');
-      const _searchQueryClick = text('*(searchQueryClick)', 'Event throws when click on search query, see in Action logger tab.');
+      const _testId = text('testId', 'search-bar-test-id');
+      const _searchQueryClick = text('*(searchQueryEvent)', 'Event throws when click on search query, see in Action logger tab.');
 
       return {
         props: {
             onChange: action('click on search query'),
-            _label, _searchQuery, _placeholder, _debounceTime
+            _searchQuery, _placeholder, _debounceTime, _testId
         },
         template: `
         <sdc-search-bar
-            [placeholder]="_placeholder"
-            [label]="_label"
+            [placeHolder]="_placeholder"
             [debounceTime]="_debounceTime"
-            [(searchQuery)]="_searchQuery"
-            (searchQueryClick)="onChange($event)">
+            [(value)]="_searchQuery"
+            [testId]="_testId"
+            (searchQueryEvent)="onChange($event)">
         </sdc-search-bar>
         `
       }

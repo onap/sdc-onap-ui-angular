@@ -1,5 +1,6 @@
-import { Component, Input, Output, ContentChildren, SimpleChanges, QueryList, EventEmitter, OnChanges, AfterContentInit } from '@angular/core';
+import { Component, Input, Output, ContentChildren, HostBinding, QueryList, EventEmitter, OnChanges, AfterContentInit } from '@angular/core';
 import { PopupMenuItemComponent } from "./popup-menu-item.component";
+import { template } from './popup-menu-list.component.html';
 
 export interface IPoint {
     x: number;
@@ -8,17 +9,10 @@ export interface IPoint {
 
 @Component({
     selector: 'popup-menu-list',
-    template:
-    `<ul
-        class="sdc-menu-list"
-        *ngIf="open"
-        [ngClass]="[className || '', relative? 'relative': '']"
-        [ngStyle]="{'left': position.x + 'px', 'top': position.y + 'px'}"
-        (click)="$event.stopPropagation()">
-        <ng-content></ng-content>
-    </ul>`
+    template: template
 })
 export class PopupMenuListComponent implements AfterContentInit {
+
     @Input()
     public get open(): boolean {
         return this._open;
@@ -41,8 +35,10 @@ export class PopupMenuListComponent implements AfterContentInit {
             this.positionChange.emit(this._position);
         }
     }
+
     @Input() public className: string;
     @Input() public relative: boolean = false;
+    @Input() public testId: string;
     @Output() public openChange: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() public positionChange: EventEmitter<IPoint> = new EventEmitter<IPoint>();
 
