@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from "@angular/forms";
 import { ValidatableComponent } from "../validation/validatable.component";
-import 'rxjs/add/operator/debounceTime';
+import { debounceTime } from 'rxjs/operators';
+import {Size} from "../../common/enums";
 
 export class BaseTextElementComponent extends ValidatableComponent implements OnInit {
 
@@ -16,7 +17,9 @@ export class BaseTextElementComponent extends ValidatableComponent implements On
     @Input() public minLength: number;
     @Input() public maxLength: number;
     @Input() public debounceTime: number;
+    @Input() public size:  Size;
     @Input() public testId: string;
+    @Input() public isViewMode: boolean;
 
     public control: FormControl;
 
@@ -28,8 +31,8 @@ export class BaseTextElementComponent extends ValidatableComponent implements On
     }
 
     ngOnInit() {
-        this.control.valueChanges.
-            debounceTime(this.debounceTime)
+        this.control.valueChanges.pipe(
+            debounceTime(this.debounceTime))
             .subscribe((newValue: any) => {
                 this.baseEmitter.emit(this.value);
             });

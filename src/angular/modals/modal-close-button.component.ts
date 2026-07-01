@@ -1,6 +1,6 @@
 import { Component, ComponentRef, Input } from "@angular/core";
 import { ModalService } from "./modal.service";
-import { RippleAnimationAction } from "../animations/ripple-click.animation.directive";
+import { RippleAnimationAction } from "../utils/animations/ripple-click.animation.directive";
 import { ModalComponent } from "./modal.component";
 import { ButtonComponent } from "../buttons/button.component";
 
@@ -12,9 +12,9 @@ import { ButtonComponent } from "../buttons/button.component";
         [ngClass]="disabled ? 'disabled' : ''"
         [rippleOnAction]="!disabled && rippleAnimationAction"
         [attr.data-tests-id]="testId"
-        (click)="!disabled && closeModal()"
+        (click)="!disabled && closeModal('close')"
         >
-        <svg-icon name="close" [mode]="disabled? 'secondary' : 'info'" size="small"></svg-icon>
+        <svg-icon name="close" [mode]="disabled? 'secondary' : 'info'" size="medium"></svg-icon>
     </div>
     `
 })
@@ -30,8 +30,8 @@ export class ModalCloseButtonComponent extends ButtonComponent {
         super();
     }
 
-    public closeModal = (): void => {
-        this.modalInstanceRef.instance.closeModal();
+    public closeModal = (btnName : string): void => {
+        this.modalInstanceRef.instance.closeModal(btnName);
     }
 
 }

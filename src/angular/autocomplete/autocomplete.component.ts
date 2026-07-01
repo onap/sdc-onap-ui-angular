@@ -3,7 +3,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AutocompletePipe } from "./autocomplete.pipe";
 import { template } from "./autocomplete.component.html";
 import { HttpClient, HttpParams } from '@angular/common/http';
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
+import {IDropDownOption} from "../form-elements/dropdown/dropdown-models";
 
 @Component({
     selector: 'sdc-autocomplete',
@@ -24,28 +25,37 @@ import 'rxjs/add/operator/map';
 })
 export class AutoCompleteComponent implements OnInit {
     @Input() public data: any[] = [];
-    @Input() public dataSchema: IDataSchema;
+    @Input() public dataSchema: IDropDownOption;
     @Input() public dataUrl: string;
     @Input() public label: string;
+    @Input() public initialValue: string;
     @Input() public placeholder: string;
     @Output() public itemSelected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() public clearInput: EventEmitter<any> = new EventEmitter<any>();
+    @Input() public testId: string;
+    @Input() public defaultRightIcon: string = 'search-o';
+    @Input() public disabled: boolean;
 
-    public searchQuery: string;
-    private complexData: any[] = [];
+    public clickOutside: boolean = false;
+    public searchQuery: string = '';
+    protected complexData: any[] = [];
     public autoCompleteResults: any[] = [];
     private isItemSelected: boolean = false;
 
-    public constructor(private http: HttpClient, private autocompletePipe: AutocompletePipe) {
+    public constructor(protected http: HttpClient, protected autocompletePipe: AutocompletePipe) {
     }
 
     public ngOnInit(): void {
         if (this.data) {
             this.handleLocalData();
         }
-        this.searchQuery = "";
+        if (this.initialValue) {
+          this.searchQuery = this.initialValue;
+          this.isItemSelected = true;
+        }
     }
 
-    private handleLocalData = (): void => {
+    public handleLocalData = (): void => {
         // Convert the data (simple | complex) to unified complex data with key value.
         // In case user supplied dataSchema, this is complex data
         if (!this.dataSchema) {
@@ -55,25 +65,25 @@ export class AutoCompleteComponent implements OnInit {
         }
     }
 
-    private convertSimpleData = (): void => {
+     public convertSimpleData = (): void => {
         this.complexData = [];
         this.data.forEach((item: any) => {
-            this.complexData.push({key: item, value: item});
+            this.complexData.push({label: item, value: item});
         });
     }
 
-    private convertComplexData = (): void => {
+    protected convertComplexData = (): void => {
         this.complexData = [];
         this.data.forEach((item: any) => {
-            this.complexData.push({key: item[this.dataSchema.key], value: item[this.dataSchema.value]});
+            this.complexData.push({label: item[this.dataSchema.label], value: item[this.dataSchema.value]});
         });
     }
 
-    private onItemSelected = (selectedItem: IDataSchema): void => {
+    protected onItemSelected = (selectedItem: IDropDownOption): void => {
         this.searchQuery = selectedItem.value;
         this.isItemSelected = true;
         this.autoCompleteResults = [];
-        this.itemSelected.emit(selectedItem.key);
+        this.itemSelected.emit(selectedItem.value);
     }
 
     public onSearchQueryChanged = (searchText: string): void => {
@@ -83,14 +93,13 @@ export class AutoCompleteComponent implements OnInit {
                 this.onClearSearch();
             } else {
                 if (this.dataUrl) {
-                    const params = new HttpParams();
-                    params.append('searchQuery', this.searchQuery);
-                    this.http.get(this.dataUrl, {params})
-                        .map((response) => {
+                    const params = {'searchQuery': this.searchQuery};
+                    this.http.get(this.dataUrl, {params: params})
+                        .pipe(map((response) => {
                             this.data = JSON.parse(JSON.stringify(response));
                             this.handleLocalData();
                             this.autoCompleteResults = this.complexData;
-                        }).subscribe();
+                        })).subscribe();
                 } else {
                     this.autoCompleteResults = this.autocompletePipe.transform(this.complexData, this.searchQuery);
                 }
@@ -99,15 +108,33 @@ export class AutoCompleteComponent implements OnInit {
         }
     }
 
-    private onClearSearch = (): void => {
+    public onRightItemClicked() {
+        if (this.disabled) {
+            return;
+        }
+        this.autoCompleteResults = this.autocompletePipe.transform(this.complexData, this.searchQuery);
+    }
+
+    protected onClearSearch = (): void => {
         this.autoCompleteResults = [];
         if (this.isItemSelected) {
             this.itemSelected.emit();
         }
+        this.searchQuery = '';
+        this.clearInput.emit();
     }
+
+    public onClickOutside(){
+        this.clickOutside = true;
+    }
+
+    public onClickInside(){
+        this.clickOutside = false;
+        if (this.disabled) {
+            return;
+        }
+        this.autoCompleteResults = this.autocompletePipe.transform(this.complexData, this.searchQuery);
+    }
+
 }
 
-export interface IDataSchema {
-    key: string;
-    value: string;
-}

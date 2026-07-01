@@ -4,6 +4,7 @@ import { CreateDynamicComponentService } from "../utils/create-dynamic-component
 import { IModalConfig, ModalType, ModalSize, IModalButtonComponent } from "./models/modal-config";
 import { ButtonType } from '../common/enums';
 import { ModalButtonComponent } from './modal-button.component';
+import { ErrorDetailModalComponent } from './error-detail-modal/error-detail-modal.component';
 
 @Injectable()
 export class ModalService {
@@ -22,34 +23,51 @@ export class ModalService {
         } as IModalConfig;
         const modalInstance: ComponentRef<ModalComponent> = this.openModal(modalConfig);
         return modalInstance.instance;
-    }
+    };
 
     /* Shortcut method to open basic modals with title, message, and OK button that simply closes the modal. */
     public openInfoModal = (title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
+
         return this.getBaseModal(ModalType.info, title, message, testId, buttons);
-    }
+    };
 
     public openWarningModal = (title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
         return this.getBaseModal(ModalType.warning, title, message, testId, buttons);
-    }
+    };
 
     public openErrorModal = (title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
         return this.getBaseModal(ModalType.error, title, message, testId, buttons);
-    }
+    };
+
+    public openErrorDetailModal = (title: string, message: string, testId: string, errorDetails?:any, buttons?: ModalButtonComponent[]): ModalComponent => {
+
+        const modalConfig = {
+            size: ModalSize.medium,
+            title: title,
+            testId: testId,
+            buttons: buttons ? buttons : [{ text: 'OK', type: ButtonType.error, closeModal: true }],
+            type: ModalType.error
+        } as IModalConfig;
+
+        return this.openCustomModal(modalConfig, ErrorDetailModalComponent, {
+            errorMessage: message,
+            additionalDetails: errorDetails
+        });
+    };
 
     public openSuccessModal = (title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
         return this.getBaseModal(ModalType.success, title, message, testId, buttons);
-    }
+    };
 
     public openCustomModal = (modalConfig: IModalConfig, dynamicComponentType: Type<any>, dynamicComponentInput?: any) => {
         const modalInstance: ComponentRef<ModalComponent> = this.openModal(modalConfig);
         this.createInnnerComponent(modalInstance, dynamicComponentType, dynamicComponentInput);
         return modalInstance.instance;
-    }
+    };
 
     public createInnnerComponent = (modalInstance: ComponentRef<ModalComponent>, dynamicComponentType: Type<any>, dynamicComponentInput?: any): void => {
         modalInstance.instance.innerModalContent = this.createDynamicComponentService.insertComponentDynamically(dynamicComponentType, dynamicComponentInput, modalInstance.instance.dynamicContentContainer);
-    }
+    };
 
     public openModal = (customModalData: IModalConfig): ComponentRef<ModalComponent> => {
         let modalInstance: ComponentRef<ModalComponent> = this.createDynamicComponentService.createComponentDynamically(ModalComponent, customModalData);
