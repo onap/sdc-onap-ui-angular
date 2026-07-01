@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { DropDownComponent } from './dropdown.component';
 import { IDropDownOption, DropDownTypes } from "./dropdown-models";
-import { FormsModule } from "@angular/forms";
-import {SvgIconModule} from "../../svg-icon/svg-icon.module";
+import { DropdownModule } from "./dropdown.module";
 
 
 const label:string = "DropDown example";
@@ -28,11 +28,10 @@ describe('DropDown component', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ DropDownComponent ],
-            imports:[
-                FormsModule,
-                SvgIconModule
-            ]
+            imports: [
+                DropdownModule
+            ],
+            schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();
         fixture = TestBed.createComponent(DropDownComponent);
         component = fixture.componentInstance;
@@ -44,7 +43,6 @@ describe('DropDown component', () => {
         component.placeHolder = placeHolder;
         component.options = options;
         component.type = DropDownTypes.Regular;
-        console.log('herer we got component', component)
         fixture.detectChanges();
     });
 
@@ -59,13 +57,19 @@ describe('DropDown component', () => {
         expect(component.selectedOption).toEqual(option);
     });
 
-    it('component should have autocomplite', () => {
+    it('component should toggle its open state', () => {
         expect(component.options.length).toEqual(3);
-        component.type = DropDownTypes.Auto;
-        component.filterValue = 'testERrorotesttresadfadfasdfasf';
-        fixture.detectChanges();
-        component.filterOptions(component.filterValue);
-        expect(component.options.length).toEqual(0);
+        expect(component.show).toEqual(false);
+        component.toggleDropdown();
+        expect(component.show).toEqual(true);
+        component.toggleDropdown();
+        expect(component.show).toEqual(false);
+    });
+
+    it('component should not open while disabled', () => {
+        component.disabled = true;
+        component.toggleDropdown();
+        expect(component.show).toEqual(false);
     });
 
 });

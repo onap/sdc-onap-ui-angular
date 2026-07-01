@@ -4,7 +4,7 @@ import { withNotes } from '@storybook/addon-notes';
 import { action, configureActions } from '@storybook/addon-actions';
 import { moduleMetadata } from '@storybook/angular';
 import { CheckboxComponent, InputComponent } from '../../src/angular/components';
-import { RippleClickAnimationDirective } from '../../src/angular/animations/ripple-click.animation.directive';
+import { RippleClickAnimationDirective } from '../../src/angular/utils/animations/ripple-click.animation.directive';
 import { FormElementsModule } from '../../src/angular/form-elements/form-elements.module';
 
 storiesOf('Form elements|Input', module)
@@ -22,7 +22,7 @@ storiesOf('Form elements|Input', module)
   .add('Simple', () => {
     const _label = text('label', 'Please Enter value');
     const _name = text('name', 'InputName');
-    const _testId = text('testId', 'sample-test-id');
+    const _testId = text('testId', 'input-test-id');
 
       return {
         props: {
@@ -47,7 +47,7 @@ storiesOf('Form elements|Input', module)
 .add('With debounce', () => {
     const _label = text('label', 'Please Enter value');
     const _name = text('name', 'InputName');
-    const _testId = text('testId', 'sample-test-id');
+    const _testId = text('testId', 'input-test-id');
     const _debounceTime = number('debounceTime', 1000);
     const _valueChange = text('*(valueChange)', 'Throws event when value changed.');
 
@@ -81,7 +81,7 @@ storiesOf('Form elements|Input', module)
     const _type = select('type', ['text', 'number', 'email']);
     const _disabled = boolean('disabled', false);
     const _required = boolean('required', false);
-    const _testId = text('testId', 'sample-test-id');
+    const _testId = text('testId', 'input-test-id');
     const _debounceTime = number('debounceTime', 1000);
     const _minLength = number('minLength', 4);
     const _maxLength = number('maxLength', 10);
