@@ -1,0 +1,244 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Linux Foundation
+
+name: Gerrit Merge
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch:
+    inputs:
+      GERRIT_BRANCH:
+        description: "Branch that change is against"
+        required: true
+        type: string
+      GERRIT_CHANGE_ID:
+        description: "The ID for the change"
+        required: true
+        type: string
+      GERRIT_CHANGE_NUMBER:
+        description: "The Gerrit number"
+        required: true
+        type: string
+      GERRIT_CHANGE_URL:
+        description: "URL to the change"
+        required: true
+        type: string
+      GERRIT_EVENT_TYPE:
+        description: "Type of Gerrit event"
+        required: true
+        type: string
+      GERRIT_PATCHSET_NUMBER:
+        description: "The patch number for the change"
+        required: true
+        type: string
+      GERRIT_PATCHSET_REVISION:
+        description: "The revision sha"
+        required: true
+        type: string
+      GERRIT_PROJECT:
+        description: "Project in Gerrit"
+        required: true
+        type: string
+      GERRIT_REFSPEC:
+        description: "Gerrit refspec of change"
+        required: true
+        type: string
+
+concurrency:
+  # yamllint disable-line rule:line-length
+  group: gerrit-merge-${{ github.workflow }}-${{ github.event.inputs.GERRIT_CHANGE_ID || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      # yamllint disable-line rule:line-length
+      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+      - name: Notify job start
+        # yamllint disable-line rule:line-length
+        uses: lfreleng-actions/gerrit-review-action@a1c036a59b94c8ab89de26d378f6a28cc7378b13 # v1.1.2
+        with:
+          host: ${{ vars.GERRIT_SERVER }}
+          username: ${{ vars.GERRIT_SSH_USER }}
+          key: ${{ secrets.GERRIT_SSH_PRIVKEY }}
+          known_hosts: ${{ vars.GERRIT_KNOWN_HOSTS }}
+          gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
+          gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
+          vote-type: clear
+          comment-only: "true"
+      - name: Allow replication
+        run: sleep 10s
+
+  npm-snapshot:
+    needs: [notify]
+    runs-on: ubuntu-latest
+    steps:
+      # yamllint disable-line rule:line-length
+      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+      # yamllint disable-line rule:line-length
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ inputs.GERRIT_PATCHSET_REVISION }}
+      - name: Read version from version.properties
+        id: version
+        run: |
+          source version.properties
+          SNAPSHOT_VERSION="${major}.${minor}.${patch}-SNAPSHOT"
+          echo "snapshot_version=$SNAPSHOT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "Snapshot version: $SNAPSHOT_VERSION"
+      # The publish build is pinned to the same legacy Node as the verify
+      # workflow's build-nodejs job: pom.xml drives the Maven CI build with
+      # frontend-maven-plugin at Node v8.11.4 / npm 5.6.0, and node-sass@4.9.2
+      # cannot install or compile on Node 18+. The reference onap-ui-common
+      # merge workflow uses Node 18, but that will not build this repo. Note
+      # this also means `npm ci` is unavailable (added in npm 5.7); use
+      # `npm install`, matching build-nodejs.
+      # yamllint disable-line rule:line-length
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "8.11.4"
+      # Create the authenticated .npmrc before the build. This action runs a
+      # nested checkout with clean: true (git clean -ffdx) which deletes all
+      # untracked paths, including the gitignored dist/ build output. Running it
+      # before Build ensures dist/ survives into npm publish.
+      - name: Create authenticated .npmrc (snapshot)
+        # yamllint disable-line rule:line-length
+        uses: lfreleng-actions/node-create-npmrc-action@ddf719ee65057195bcb7c813ec54df9b7db25e1d # v0.1.1
+        with:
+          registry_url: "https://nexus3.onap.org/repository/npm.snapshot/"
+          nexus_user: "sdc-onap-ui-angular"
+          load_credential: "true"
+          vault_mapping_json: ${{ secrets.VAULT_MAPPING_JSON }}
+          op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      - name: Build
+        run: |
+          # The authenticated .npmrc above sets npm.snapshot as the default
+          # registry so `npm publish` targets it. npm.snapshot is a hosted
+          # repo holding only this package, so installing dependencies from it
+          # 404s. Install from the npm.public group, which proxies the public
+          # registry, while leaving the .npmrc default for publish.
+          npm install --registry=https://nexus3.onap.org/repository/npm.public/
+          npm run build
+      - name: Publish snapshot to Nexus
+        run: |
+          VERSION="${{ steps.version.outputs.snapshot_version }}"
+          # --allow-same-version so `npm version` is a no-op (rather than
+          # erroring) when package.json already holds this version.
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          npm publish
+
+  check-release:
+    needs: [notify]
+    runs-on: ubuntu-latest
+    outputs:
+      has_release: ${{ steps.check.outputs.has_release }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      # yamllint disable-line rule:line-length
+      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+      # yamllint disable-line rule:line-length
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ inputs.GERRIT_PATCHSET_REVISION }}
+          fetch-depth: 2
+      - name: Check for release file
+        id: check
+        run: |
+          # --diff-filter=A: only an ADDED file under releases/ triggers a
+          # release. Without it, removing a release file would also match and
+          # fire this job with a path that no longer exists (empty version).
+          RELEASE_FILE=$(git diff-tree --no-commit-id -r HEAD \
+            --diff-filter=A --name-only -- "releases/" | head -1)
+          if [ -z "$RELEASE_FILE" ]; then
+            echo "has_release=false" >> "$GITHUB_OUTPUT"
+            echo "No release file in this change, skipping release"
+          else
+            echo "has_release=true" >> "$GITHUB_OUTPUT"
+            VERSION=$(grep '^version:' "$RELEASE_FILE" \
+              | awk '{print $2}' | tr -d "'\"\r")
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "Detected release version: $VERSION"
+          fi
+
+  npm-release:
+    needs: [check-release]
+    if: needs.check-release.outputs.has_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      # yamllint disable-line rule:line-length
+      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+      # yamllint disable-line rule:line-length
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ inputs.GERRIT_PATCHSET_REVISION }}
+      # Pinned to Node 8.11.4 for the same node-sass@4.9.2 reason as the
+      # snapshot job above.
+      # yamllint disable-line rule:line-length
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "8.11.4"
+      # Create the authenticated .npmrc before the build. This action runs a
+      # nested checkout with clean: true (git clean -ffdx) which deletes all
+      # untracked paths, including the gitignored dist/ build output. Running it
+      # before Build ensures dist/ survives into npm publish.
+      - name: Create authenticated .npmrc (release)
+        # yamllint disable-line rule:line-length
+        uses: lfreleng-actions/node-create-npmrc-action@ddf719ee65057195bcb7c813ec54df9b7db25e1d # v0.1.1
+        with:
+          registry_url: "https://nexus3.onap.org/repository/npm.release/"
+          nexus_user: "sdc-onap-ui-angular"
+          load_credential: "true"
+          vault_mapping_json: ${{ secrets.VAULT_MAPPING_JSON }}
+          op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      - name: Build
+        run: |
+          # The authenticated .npmrc above sets npm.release as the default
+          # registry so `npm publish` targets it. npm.release is a hosted
+          # repo holding only this package, so installing dependencies from it
+          # 404s. Install from the npm.public group, which proxies the public
+          # registry, while leaving the .npmrc default for publish.
+          npm install --registry=https://nexus3.onap.org/repository/npm.public/
+          npm run build
+      - name: Publish release to Nexus
+        run: |
+          VERSION="${{ needs.check-release.outputs.version }}"
+          # --allow-same-version so `npm version` is a no-op (rather than
+          # erroring with "Version not changed") when package.json already
+          # holds the release version, as it does for a release cut from the
+          # current version.properties.
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          npm publish
+
+  report-status:
+    if: ${{ always() }}
+    needs: [notify, npm-snapshot, check-release, npm-release]
+    runs-on: ubuntu-latest
+    steps:
+      # yamllint disable-line rule:line-length
+      - uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+      - name: Get workflow conclusion
+        uses: im-open/workflow-conclusion@8eac7f17381a6917bc04fec3e2c92e70ebc37526 # v3.0.0
+      - name: Report workflow conclusion
+        # yamllint disable-line rule:line-length
+        uses: lfreleng-actions/gerrit-review-action@a1c036a59b94c8ab89de26d378f6a28cc7378b13 # v1.1.2
+        with:
+          host: ${{ vars.GERRIT_SERVER }}
+          username: ${{ vars.GERRIT_SSH_USER }}
+          key: ${{ secrets.GERRIT_SSH_PRIVKEY }}
+          known_hosts: ${{ vars.GERRIT_KNOWN_HOSTS }}
+          gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
+          gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
+          vote-type: ${{ env.WORKFLOW_CONCLUSION }}
+          comment-only: "true"
