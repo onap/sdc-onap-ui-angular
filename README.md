@@ -54,7 +54,7 @@ onap-ui-common also contains to SCSS files:
 variables.scss
 mixins.scss
 
-You can import these files to your project and get the same color scheme and variables line onap-ui-common.
+You can import these files to your project and get the same color scheme and variables like onap-ui-common.
 
 
 #### Using the library in latest Angular (6)
