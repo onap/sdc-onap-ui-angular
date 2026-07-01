@@ -1,18 +1,14 @@
 export const template = `
-<div (click)="fileOpener.click()" 
-     class="sdc-button sdc-button__{{ type }} btn-{{ size }} {{ iconPositionClass }}"
+<div class="sdc-button sdc-button__{{ type }} btn-{{ size }} {{ iconPositionClass }}"
      [attr.data-tests-id]="testId"
      >
     {{ text }}
-    <input
-        #fileOpener
-        type="file"
-        [accept]="allowedExtensions" 
-        [disabled] = "disabled"
-        (change)="onFileSelect($event)"
-        base-sixty-four-input
-    />
+    <onap-file-opener 
+      [extensions]="extensions"
+       [disabled]="disabled" 
+       [testId]="testId"
+       [convertToBase64]="convertToBase64"
+       (fileUpload)="fileUploaded($event)"> 
+  </onap-file-opener>
 </div>
 `;
-
-// base-sixty-four-input

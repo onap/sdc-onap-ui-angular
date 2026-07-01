@@ -3,11 +3,15 @@
  */
 
 // Form Elements
+import {DropdownResultsComponent} from "./form-elements/dropdown/dropdown-result/dropdown-results.component";
+
 export { InputComponent } from "./form-elements/text-elements/input/input.component";
 export { DropDownComponent } from "./form-elements/dropdown/dropdown.component";
+export { DropdownResultsComponent } from "./form-elements/dropdown/dropdown-result/dropdown-results.component"
 export { CheckboxComponent } from "./form-elements/checkbox/checkbox.component";
 export { RadioGroupComponent } from "./form-elements/radios/radio-buttons-group.component";
 export { TextareaComponent } from "./form-elements/text-elements/textarea/textarea.component";
+export { NumberInputComponent } from "./form-elements/text-elements/number-input/number-input.component";
 
 // Buttons
 export { ButtonComponent } from "./buttons/button.component";
@@ -49,15 +53,19 @@ export { SvgIconLabelComponent } from "./svg-icon/svg-icon-label.component";
 // Accordion
 export { AccordionComponent } from './accordion/accordion.component';
 
-// Multiline Ellipsis
-export { MultilineEllipsisComponent } from './multiline-ellipsis/multiline-ellipsis.component';
+// Ellipsis
+export { MultilineEllipsisComponent } from './ellipsis/multiline-ellipsis.component';
+export { CharsEllipsisComponent } from './ellipsis/chars-ellipsis.component';
 
 // AutoComplete
 export { AutoCompleteComponent } from './autocomplete/autocomplete.component';
 export { AutocompletePipe } from './autocomplete/autocomplete.pipe';
 
+// ComboBox
+export { ComboBoxComponent } from './autocomplete/combo-box.component';
+
 // Filter
-export { FilterBarComponent } from './filterbar/filter-bar.component';
+export { FilterBarComponent } from './search/filter-bar.component';
 
 // Infinite Scroll
 export { InfiniteScrollDirective } from './infinite-scroll/infinite-scroll.directive';
@@ -66,7 +74,19 @@ export { InfiniteScrollDirective } from './infinite-scroll/infinite-scroll.direc
 export { LoaderComponent } from './loader/loader.component';
 
 // Searchbar
-export { SearchBarComponent } from './searchbar/search-bar.component';
+export { SearchBarComponent } from './search/search-bar.component';
 
 // Tooltip
 export { TooltipDirective } from "./tooltip/tooltip.directive";
+
+
+// Files
+export { FileUploadComponent } from "./file-upload/file-upload.component";
+
+
+// Files
+export { FileOpenerComponent } from "./utils/file-opener/file-opener.component";
+
+
+// Validation Message
+export { ValidationMessageComponent } from "./validation-message/validation-message.component";

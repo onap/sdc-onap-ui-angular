@@ -1,6 +1,6 @@
 import { Component, Input, AfterContentInit, ContentChildren, QueryList, HostBinding, EventEmitter, Output } from '@angular/core';
 import { TabComponent } from './children/tab.component';
-import { Mode, Size } from './../common/enums';
+import { Mode, Size, TabsStyle } from './../common/enums';
 import { template } from "./tabs.component.html";
 
 @Component({
@@ -11,10 +11,13 @@ import { template } from "./tabs.component.html";
 export class TabsComponent implements AfterContentInit {
 
     @HostBinding('class') classes = 'sdc-tabs sdc-tabs-header';
+    @HostBinding('class.vertical') verticalClass: boolean;
     @ContentChildren(TabComponent) public tabs: QueryList<TabComponent>;
-    @Output() public selectedTab: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();   
-
-    public _size = Size.medium;
+    @Input() public testId: string;
+    @Input() public iconsSize: Size = Size.medium;
+    @Input() public isVertical: boolean = false;
+    @Input() public tabStyle: TabsStyle = TabsStyle.panel;
+    @Output() public selectedTab: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
 
     public selectTab(tab: TabComponent) {
         this.selectedTab.emit(tab);
@@ -29,6 +32,10 @@ export class TabsComponent implements AfterContentInit {
         tab.titleIconMode = Mode.primary;
     }
 
+  public ngOnInit() {
+    this.verticalClass = this.isVertical;
+  }
+
     public ngAfterContentInit() {
         // get all active tabs
         const activeTabs = this.tabs.filter((tab) => tab.active);
@@ -38,5 +45,4 @@ export class TabsComponent implements AfterContentInit {
             this.selectTab(this.tabs.first);
         }
     }
-
 }

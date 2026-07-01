@@ -13,13 +13,14 @@ const centerMiddleSuffix = 'center__middle';
     selector: '[sdc-tooltip]'
 })
 export class TooltipDirective implements OnInit {
-    @Input('tooltip-text') public text = 'tooltip';
+    @Input('tooltip-text') public text;
     @Input('tooltip-placement') public placement: TooltipPlacement = TooltipPlacement.Top;
     @Input('tooltip-css-class') public customCssClass: string;
     @Input('tooltip-template') public template: TemplateRef<any>;
     @Input('tooltip-arrow-offset') public arrowOffset: number = 10;
     @Input('tooltip-arrow-placement') public arrowPlacement: ArrowPlacement = ArrowPlacement.LeftTop;
     @Input('tooltip-offset') public tooltipOffset: number = 3;
+    @Input('tooltip-hide-onclick') public hideOnClick: boolean = false;
 
     private cssClass: string = 'sdc-tooltip'; // default css class
     private tooltip: any; // tooltip html element
@@ -38,16 +39,27 @@ export class TooltipDirective implements OnInit {
 
     @HostListener('mouseenter')
     public onMouseEnter() {
-        this.show();
-        this.activateScrollEvent();
+      if(this.text || this.template) {
+          this.show();
+          this.activateScrollEvent();
+      }
     }
 
     @HostListener('mouseleave')
     public onMouseLeave() {
-        this.hide();
-        this.deactivateScrollEvent();
+      if(this.text || this.template) {
+          this.hide();
+          this.deactivateScrollEvent();
+      }
     }
 
+    @HostListener('click')
+    public onClick() {
+        if(this.hideOnClick) {
+            this.onMouseLeave();
+        }
+    }
+    
     ngOnInit(): void {
         this.initScrollEvent();
     }
@@ -71,8 +83,10 @@ export class TooltipDirective implements OnInit {
 
             if (this.template) {
                 this.tooltipTemplateContainer.instance.container.createEmbeddedView(this.template);
+            } else if(this.text) {
+                this.tooltip.textContent = this.text;
             } else {
-                this.tooltip.textContent = this.text ? this.text : 'tooltip';
+                this.tooltip = undefined;
             }
 
             this.setCssClass(true);
@@ -134,11 +148,11 @@ export class TooltipDirective implements OnInit {
     }
 
     private setCssClass(isAdd: boolean, suffix: string = '') {
-        this.renderer.setElementClass(this.tooltip, this.cssClass + suffix, isAdd);
+          this.renderer.setElementClass(this.tooltip, this.cssClass + suffix, isAdd);
 
-        if (this.customCssClass) {
-            this.renderer.setElementClass(this.tooltip, this.customCssClass + suffix, isAdd);
-        }
+          if (this.customCssClass) {
+              this.renderer.setElementClass(this.tooltip, this.customCssClass + suffix, isAdd);
+          }
     }
 
     /**
