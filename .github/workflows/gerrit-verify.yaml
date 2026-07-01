@@ -87,17 +87,19 @@ jobs:
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
 
-      # The build toolchain is pinned to a legacy Node: pom.xml drives the
-      # Maven CI build with frontend-maven-plugin at Node v8.11.4 / npm 5.6.0,
-      # and node-sass@4.9.2 cannot install or compile on Node 18+. To reproduce
-      # the current, known-good build faithfully we pin the same Node here.
-      # This is why node-build-action (which assumes a modern Node) is not used
-      # and why the install step below is `npm install`, not `npm ci` (npm ci
-      # was introduced in npm 5.7, one minor above what Node 8 bundles).
+      # The build toolchain is pinned to Node 10 (npm 6), matching the
+      # gerrit-merge publish jobs so this verify build faithfully reproduces
+      # what gets published. Node 10 is the newest version whose bundled
+      # node-sass@4.9.2 still resolves a prebuilt binary (Node 12+ forces a
+      # source compile that fails, and node-sass cannot build on Node 18+),
+      # while its npm 6 honors the scoped `_auth` the publish workflow needs.
+      # node-build-action (which assumes a modern Node) is not used, and the
+      # install step below is `npm install`, not `npm ci`: package.json and the
+      # committed lockfile are out of sync, so `npm ci` would refuse to run.
       # yamllint disable-line rule:line-length
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: "8.11.4"
+          node-version: "10"
 
       - name: Install dependencies
         run: npm install

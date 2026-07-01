@@ -92,17 +92,24 @@ jobs:
           SNAPSHOT_VERSION="${major}.${minor}.${patch}-SNAPSHOT"
           echo "snapshot_version=$SNAPSHOT_VERSION" >> "$GITHUB_OUTPUT"
           echo "Snapshot version: $SNAPSHOT_VERSION"
-      # The publish build is pinned to the same legacy Node as the verify
-      # workflow's build-nodejs job: pom.xml drives the Maven CI build with
-      # frontend-maven-plugin at Node v8.11.4 / npm 5.6.0, and node-sass@4.9.2
-      # cannot install or compile on Node 18+. The reference onap-ui-common
-      # merge workflow uses Node 18, but that will not build this repo. Note
-      # this also means `npm ci` is unavailable (added in npm 5.7); use
+      # Node is pinned to 10 (npm 6). Two constraints bound the version:
+      #  - Lower bound: node-create-npmrc-action (below) writes a path-scoped
+      #    `_auth` key (//host/path/:_auth=base64(user:pass)). npm 5.6.0 --
+      #    bundled with the Node 8.11.4 used by the verify build-nodejs job --
+      #    silently ignores scoped `_auth`, so publish fails with ENEEDAUTH.
+      #    npm 6 (Node 10) honors it, so publish authenticates. This is why the
+      #    reference onap-ui-common merge workflow works on Node 18 while this
+      #    repo could not stay on Node 8.
+      #  - Upper bound: node-sass@4.9.2 ships prebuilt binaries only through
+      #    Node 10; Node 12+ forces a source compile that fails here, and
+      #    onap-ui-common's Node 18 cannot build this repo.
+      # `npm ci` is still avoided (package.json and the committed lockfile are
+      # out of sync, and the lock's darwin-only fsevents entry breaks it); use
       # `npm install`, matching build-nodejs.
       # yamllint disable-line rule:line-length
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: "8.11.4"
+          node-version: "10"
       # Create the authenticated .npmrc before the build. This action runs a
       # nested checkout with clean: true (git clean -ffdx) which deletes all
       # untracked paths, including the gitignored dist/ build output. Running it
@@ -181,12 +188,12 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ref: ${{ inputs.GERRIT_PATCHSET_REVISION }}
-      # Pinned to Node 8.11.4 for the same node-sass@4.9.2 reason as the
-      # snapshot job above.
+      # Pinned to Node 10 for the same npm-6-honors-scoped-_auth and
+      # node-sass@4.9.2 reasons as the snapshot job above.
       # yamllint disable-line rule:line-length
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          node-version: "8.11.4"
+          node-version: "10"
       # Create the authenticated .npmrc before the build. This action runs a
       # nested checkout with clean: true (git clean -ffdx) which deletes all
       # untracked paths, including the gitignored dist/ build output. Running it
