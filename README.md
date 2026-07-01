@@ -11,7 +11,7 @@ Note: the project is build of 3 different projects:
 
 ### Usage
 
-To start using this library you need to install 2 libraris:
+To start using this library you need to install 2 libraries:
 1. onap-ui-angular or onap-ui-react.
 2. onap-ui-common
 
