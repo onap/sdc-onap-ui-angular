@@ -61,10 +61,14 @@ module.exports = {
         '!src/angular/**/__mocks__/**',
     ],
     coverageDirectory: 'coverage',
-    // 'html' produces the browsable report uploaded as a CI artifact; 'lcov' and
-    // 'cobertura' are machine-readable for any downstream tooling; 'text-summary'
-    // prints the totals to the job log.
-    coverageReporters: ['html', 'lcov', 'cobertura', 'text-summary'],
+    // NB: we do NOT use Jest's built-in 'html'/'lcov' reporters. Jest 23 bundles
+    // istanbul-reports@1.5.1, whose Handlebars HTML template renders every
+    // coverage number BLANK under Handlebars >= 4.6.0 (prototype-access is
+    // blocked by default). Instead we emit machine-readable formats here and
+    // render the browsable HTML from coverage-final.json with a modern,
+    // handlebars-free istanbul-reports@3 (scripts/render-coverage-html.js, run
+    // via `npm run coverage:html`). 'json' is what that script consumes.
+    coverageReporters: ['json', 'lcovonly', 'cobertura', 'text-summary'],
     // A regression floor, set comfortably below the current numbers (statements
     // ~75%, branches ~52%, functions ~65%, lines ~73%) so ordinary variance does
     // not break CI but a meaningful coverage drop does. Raise these as coverage

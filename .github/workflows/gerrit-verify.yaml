@@ -159,10 +159,18 @@ jobs:
       - name: Run unit tests with coverage
         run: npm test -- --ci --coverage
 
+      # Render the browsable HTML report from coverage-final.json. Jest 23's
+      # bundled istanbul-reports@1.5.1 renders every number blank under modern
+      # Handlebars, so the HTML is produced here with a handlebars-free
+      # istanbul-reports@3 instead (see scripts/render-coverage-html.js). Runs on
+      # success or failure so the report is still produced when the coverage
+      # threshold is breached.
+      - name: Render HTML coverage report
+        if: ${{ always() }}
+        run: npm run coverage:html
+
       # Publish the HTML coverage report as a browsable artifact. Downloading and
       # opening coverage/index.html gives a per-file, per-line coverage view.
-      # Uploaded on success or failure so a coverage-threshold breach is still
-      # inspectable.
       # yamllint disable-line rule:line-length
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: ${{ always() }}
