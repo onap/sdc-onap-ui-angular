@@ -49,6 +49,10 @@ module.exports = {
         '!src/angular/**/*.html.ts',
         '!src/angular/**/*.d.ts',
         '!src/angular/**/index.ts',
+        // NgModules are pure declarations (imports/declarations/exports arrays)
+        // with no executable logic; counting them only depresses the function
+        // metric with unreachable "functions" that are really just class stubs.
+        '!src/angular/**/*.module.ts',
         '!src/angular/components.ts',
         '!src/angular/services.ts',
         '!src/angular/test.ts',
@@ -62,15 +66,15 @@ module.exports = {
     // prints the totals to the job log.
     coverageReporters: ['html', 'lcov', 'cobertura', 'text-summary'],
     // A regression floor, set comfortably below the current numbers (statements
-    // ~74%, branches ~49%, functions ~62%, lines ~72%) so ordinary variance does
+    // ~75%, branches ~52%, functions ~65%, lines ~73%) so ordinary variance does
     // not break CI but a meaningful coverage drop does. Raise these as coverage
     // grows; do not let them drift far below the actuals.
     coverageThreshold: {
         global: {
-            statements: 70,
-            branches: 44,
-            functions: 58,
-            lines: 67,
+            statements: 71,
+            branches: 47,
+            functions: 60,
+            lines: 69,
         },
     },
 };

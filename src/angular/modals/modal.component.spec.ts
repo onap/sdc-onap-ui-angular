@@ -1,6 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ModalService } from './modal.service';
+import { ModalComponent } from './modal.component';
 import { CreateDynamicComponentService } from "../utils/create-dynamic-component.service";
 
 // Minimal ComponentRef-like stand-in returned by the mocked dynamic-component
@@ -56,6 +57,26 @@ describe("Modal unit-tests", () => {
 
     it('Modal info window test', () => {
         const modalInstance = testService.openErrorModal('Error title', 'testMessage', 'sampleTestId');
+        expect(modalInstance).toBeTruthy();
+    });
+
+    it('opens an info modal', () => {
+        const modalInstance = testService.openInfoModal('Info title', 'testMessage', 'infoTestId');
+        expect(modalInstance).toBeTruthy();
+    });
+
+    it('opens a success modal', () => {
+        const modalInstance = testService.openSuccessModal('Success title', 'testMessage', 'successTestId');
+        expect(modalInstance).toBeTruthy();
+    });
+
+    it('opens an error-detail modal (custom inner component)', () => {
+        const modalInstance = testService.openErrorDetailModal('Error title', 'testMessage', 'errorDetailTestId', { code: 500 });
+        expect(modalInstance).toBeTruthy();
+    });
+
+    it('opens a custom modal and inserts the inner component', () => {
+        const modalInstance = testService.openCustomModal(testInputModal, ModalComponent, { foo: 'bar' });
         expect(modalInstance).toBeTruthy();
     });
 });
