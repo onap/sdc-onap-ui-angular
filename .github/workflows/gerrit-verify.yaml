@@ -110,6 +110,19 @@ jobs:
       - name: Build Storybook
         run: npm run storybook:build
 
+      # Publish the built Storybook as a browsable artifact. Storybook is the
+      # library's living component gallery and the render surface the storyshots
+      # tests drive, so downloading and opening .storybook-out/index.html gives
+      # reviewers a visual view of every component/story on the patchset.
+      # yamllint disable-line rule:line-length
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ always() }}
+        with:
+          name: storybook-static
+          path: .storybook-out/
+          if-no-files-found: warn
+          retention-days: 14
+
   test-nodejs:
     needs: [notify]
     runs-on: ubuntu-latest
@@ -143,8 +156,21 @@ jobs:
       - name: Install dependencies
         run: npm install --ignore-scripts --no-package-lock
 
-      - name: Run unit tests
-        run: npm test
+      - name: Run unit tests with coverage
+        run: npm test -- --ci --coverage
+
+      # Publish the HTML coverage report as a browsable artifact. Downloading and
+      # opening coverage/index.html gives a per-file, per-line coverage view.
+      # Uploaded on success or failure so a coverage-threshold breach is still
+      # inspectable.
+      # yamllint disable-line rule:line-length
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ always() }}
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: warn
+          retention-days: 14
 
   report-status:
     if: ${{ always() }}
