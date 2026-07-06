@@ -115,7 +115,7 @@ jobs:
       # tests drive, so downloading and opening .storybook-out/index.html gives
       # reviewers a visual view of every component/story on the patchset.
       # yamllint disable-line rule:line-length
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{ always() }}
         with:
           name: storybook-static
@@ -164,7 +164,7 @@ jobs:
       # Uploaded on success or failure so a coverage-threshold breach is still
       # inspectable.
       # yamllint disable-line rule:line-length
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{ always() }}
         with:
           name: coverage-report
