@@ -12,6 +12,7 @@ export const template = `
                  [isIconClickable] ="value? true: false"
                  (valueChange)="onSearchQueryChanged($event)"
                  [disabled]="disabled"
+                 [focusableInViewMode]="true"
                  [testId]="testId + '-filter-bar'"
                  (clickOutside)="onClickOutside()"
                  (click)="onClickInside()"

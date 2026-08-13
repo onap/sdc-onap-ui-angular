@@ -1,4 +1,7 @@
 import { ElementRef } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { AutoCompleteModule } from './autocomplete.module';
 import { IDropDownOption } from '../form-elements/dropdown/dropdown-models';
 import { AutocompletePipe } from './autocomplete.pipe';
 import { ComboBoxComponent } from './combo-box.component';
@@ -57,5 +60,34 @@ describe('ComboBoxComponent', () => {
         component.rightIconClickedEmitter.subscribe(() => { emitted = true; });
         component.onRightIconClicked();
         expect(emitted).toEqual(false);
+    });
+});
+
+// The field is the shared sdc-input in view mode once a value is chosen. Rendered disabled, it
+// dispatched no clicks, so clicking the chosen value never got back into search mode.
+describe('ComboBoxComponent field', () => {
+    let fixture: ComponentFixture<ComboBoxComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({imports: [AutoCompleteModule], providers: [AutocompletePipe]}).compileComponents();
+        fixture = TestBed.createComponent(ComboBoxComponent);
+        fixture.componentInstance.data = [{ label: '1', value: 'Apple' }];
+        fixture.detectChanges();
+    }));
+
+    const field = (): HTMLInputElement =>
+        fixture.debugElement.query(By.css('input.sdc-input__input')).nativeElement;
+
+    it('re-enters search mode when the chosen value is clicked', () => {
+        fixture.componentInstance.onItemSelected({ label: '1', value: 'Apple' });
+        fixture.detectChanges();
+        expect(field().readOnly).toEqual(true);
+        expect(field().hasAttribute('disabled')).toEqual(false);
+
+        field().click();
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.autoCompleteResults.length).toEqual(1);
+        expect(field().readOnly).toEqual(false);
     });
 });
