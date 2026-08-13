@@ -15,3 +15,9 @@ export interface IDropDownOption {
     label: string;
     type?: DropDownOptionType;
 }
+
+// Shared by sdc-dropdown, which points aria-activedescendant at the active option, and by
+// dropdown-results, which puts the id on the option itself. Both must agree.
+export const dropdownOptionId = (listboxId: string, optionIndex: number): string => {
+    return `${listboxId}-option-${optionIndex}`;
+};
