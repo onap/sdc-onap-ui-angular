@@ -1,6 +1,6 @@
 export const template = `
 <div (clickOutside)="closeListOptions()" class="sdc-dropdown" [attr.data-tests-id]="testId">
-      <input type="hidden" class="sdc-dropdown__value" [name]="name" [value]="this.selectedOption.value" />
+      <input type="hidden" class="sdc-dropdown__value" [name]="name" [value]="selectedValue" />
       <sdc-input class="sdc-dropdown__input" #dropdownInput
               [disabled]="disabled"
               [value]="this.selectedOption.label"

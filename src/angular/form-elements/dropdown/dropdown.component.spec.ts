@@ -72,4 +72,39 @@ describe('DropDown component', () => {
         expect(component.show).toEqual(false);
     });
 
+    // Regression tests for SDC-4885. BaseTextElementComponent defaults placeHolder to '',
+    // but a consumer binding an expression that evaluates to undefined overwrites that
+    // default. placeholder and value are reflected DOMString properties, so assigning
+    // undefined to either stringifies it and paints the word "undefined" in the field.
+    describe('when nothing is selected and the consumer supplies no placeholder', () => {
+
+        beforeEach(() => {
+            component.placeHolder = undefined;
+            fixture.detectChanges();
+        });
+
+        it('leaves the field placeholder empty rather than showing "undefined"', () => {
+            const field = fixture.nativeElement.querySelector('input.sdc-input__input');
+            expect(field.getAttribute('placeholder')).toEqual('');
+        });
+
+        it('leaves the hidden value field empty rather than showing "undefined"', () => {
+            const hidden = fixture.nativeElement.querySelector('input.sdc-dropdown__value');
+            expect(hidden.value).toEqual('');
+        });
+
+    });
+
+    it('still renders a placeholder the consumer did supply', () => {
+        const field = fixture.nativeElement.querySelector('input.sdc-input__input');
+        expect(field.getAttribute('placeholder')).toEqual(placeHolder);
+    });
+
+    it('exports a falsy option value as-is instead of coercing it to an empty string', () => {
+        component.selectOption({label: 'Zero', value: 0});
+        fixture.detectChanges();
+        const hidden = fixture.nativeElement.querySelector('input.sdc-dropdown__value');
+        expect(hidden.value).toEqual('0');
+    });
+
 });
