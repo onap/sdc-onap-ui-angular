@@ -55,6 +55,15 @@ export class DropDownComponent extends BaseTextElementComponent implements OnIni
         return this.selectedOption && this.selectedOption.value;
     }
 
+    // selectedOption is an empty object until something is picked, and the hidden field's
+    // `value` is a reflected DOMString property, so binding an unset value straight to it
+    // would stringify to "undefined". A plain `|| ''` cannot be used here because option
+    // values of 0 or false have to reach the surrounding form unchanged.
+    public get selectedValue(): any {
+        const value = this.getValue();
+        return value === undefined || value === null ? '' : value;
+    }
+
     private getSelectedOptionByVal = (value: string): IDropDownOption => {
         return this.allOptions.filter(item => item.value === value && this.isSelectable(item))[0];
     }
