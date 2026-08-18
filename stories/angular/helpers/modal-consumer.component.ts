@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, ComponentRef} from "@angular/core";
 import { ModalService } from "../../../src/angular/modals/modal.service";
-import { IModalConfig, ModalType, ModalSize, TitleIconDetails } from "../../../src/angular/modals/models/modal-config";
+import { IModalButtonComponent, IModalConfig, ModalType, ModalSize, TitleIconDetails } from "../../../src/angular/modals/models/modal-config";
 import { ModalButtonComponent } from './../../../src/angular/modals/modal-button.component';
 import { Placement, ButtonType } from "../../../src/angular/common/enums";
 import { ModalComponent } from "../../../src/angular/components";
@@ -56,19 +56,19 @@ export class ModalConsumerComponent {
 
 
     private openInfoModalWithCustomButtons = (): void => {
-        const buttons = [
+        const buttons: IModalButtonComponent[] = [
             { text: 'CONFIRM', type: ButtonType.info, callback: this.onConfirmAction, closeModal: true },
             { text: 'CANCEL', type: ButtonType.info, closeModal: true }
-        ] as ModalButtonComponent[];
+        ];
         this.modalService.openInfoModal('Info modal title', MODAL_CONTENT, "infoModalCustomTestId", buttons);
     }
 
     private openWarningModalWithCustomButtons = (): void => {
-        const buttons = [
+        const buttons: IModalButtonComponent[] = [
             { text: 'SAVE', type: ButtonType.warning, callback: this.onSaveAction, closeModal: true },
             { text: 'APPLY', type: ButtonType.warning, callback: this.onApplyAction },
             { text: 'CANCEL', type: ButtonType.warning, closeModal: true }
-        ] as ModalButtonComponent[];
+        ];
         this.modalService.openWarningModal('Warning modal title', MODAL_CONTENT, "warningModalCustomTestId", buttons);
     }
 
@@ -146,10 +146,10 @@ export class ModalConsumerComponent {
     }
 
     private customModalUpdateButtons2 = (): void => {
-        const newButtons = [
+        const newButtons: IModalButtonComponent[] = [
             {text: "Change title", callback: this.customModalChangeTitle2, closeModal: false},
             {text: "Do nothing", closeModal: false}
-          ] as ModalButtonComponent[];
+          ];
         this.customModal2.setButtons(newButtons);
     }
 

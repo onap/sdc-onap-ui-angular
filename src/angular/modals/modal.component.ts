@@ -12,7 +12,7 @@ import {
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ModalButtonComponent } from './modal-button.component';
 import { ModalCloseButtonComponent } from './modal-close-button.component';
-import { ModalType, TitleIconDetails } from './models/modal-config';
+import { IModalButtonComponent, ModalType, TitleIconDetails } from './models/modal-config';
 import { template } from './modal.component.html';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Size, Mode } from '../common/enums';
@@ -136,8 +136,10 @@ export class ModalComponent implements OnInit {
         return this.buttons;
     }
 
-    public setButtons = (_buttons: ModalButtonComponent[]): void => {
-        this.buttons = _buttons;
+    public setButtons = (_buttons: IModalButtonComponent[]): void => {
+        // `buttons` keeps its class type because getButtons()/getButtonById() are public API that
+        // consumers annotate as ModalButtonComponent. Only the config fields are ever read off it.
+        this.buttons = _buttons as ModalButtonComponent[];
     }
 
     public getTitle = (): string => {

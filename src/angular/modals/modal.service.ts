@@ -3,7 +3,6 @@ import { ModalComponent } from "./modal.component";
 import { CreateDynamicComponentService } from "../utils/create-dynamic-component.service";
 import { IModalConfig, ModalType, ModalSize, IModalButtonComponent } from "./models/modal-config";
 import { ButtonType } from '../common/enums';
-import { ModalButtonComponent } from './modal-button.component';
 import { ErrorDetailModalComponent } from './error-detail-modal/error-detail-modal.component';
 
 @Injectable()
@@ -12,7 +11,7 @@ export class ModalService {
     constructor(private createDynamicComponentService: CreateDynamicComponentService) {
     }
 
-    private getBaseModal = (type: ModalType | ButtonType, title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
+    private getBaseModal = (type: ModalType | ButtonType, title: string, message: string, testId: string, buttons?: IModalButtonComponent[]): ModalComponent => {
         const modalConfig = {
             size: ModalSize.small,
             title: title,
@@ -26,20 +25,20 @@ export class ModalService {
     };
 
     /* Shortcut method to open basic modals with title, message, and OK button that simply closes the modal. */
-    public openInfoModal = (title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
+    public openInfoModal = (title: string, message: string, testId: string, buttons?: IModalButtonComponent[]): ModalComponent => {
 
         return this.getBaseModal(ModalType.info, title, message, testId, buttons);
     };
 
-    public openWarningModal = (title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
+    public openWarningModal = (title: string, message: string, testId: string, buttons?: IModalButtonComponent[]): ModalComponent => {
         return this.getBaseModal(ModalType.warning, title, message, testId, buttons);
     };
 
-    public openErrorModal = (title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
+    public openErrorModal = (title: string, message: string, testId: string, buttons?: IModalButtonComponent[]): ModalComponent => {
         return this.getBaseModal(ModalType.error, title, message, testId, buttons);
     };
 
-    public openErrorDetailModal = (title: string, message: string, testId: string, errorDetails?:any, buttons?: ModalButtonComponent[]): ModalComponent => {
+    public openErrorDetailModal = (title: string, message: string, testId: string, errorDetails?:any, buttons?: IModalButtonComponent[]): ModalComponent => {
 
         const modalConfig = {
             size: ModalSize.medium,
@@ -55,7 +54,7 @@ export class ModalService {
         });
     };
 
-    public openSuccessModal = (title: string, message: string, testId: string, buttons?: ModalButtonComponent[]): ModalComponent => {
+    public openSuccessModal = (title: string, message: string, testId: string, buttons?: IModalButtonComponent[]): ModalComponent => {
         return this.getBaseModal(ModalType.success, title, message, testId, buttons);
     };
 

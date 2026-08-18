@@ -167,10 +167,10 @@ let stories = storiesOf('Modal', module)
     { notes: `<h2> Info modal with custom buttons</h2>
               When click on view model Info with custom buttons model will open`+
               `<br>Source Code:` +
-              `<br><b>const buttons = [
+              `<br><b>const buttons: IModalButtonComponent[] = [
                     { text: 'CONFIRM', type: ButtonType.info, callback: this.onConfirmAction, closeModal: true },
                     { text: 'CANCEL', type: ButtonType.info, closeModal: true }
-                  ] as ModalButtonComponent[];
+                  ];
                 this.modalService.openInfoModal('Info modal title', 'Info modal content', "infoModalTestId", buttons);
                 private onConfirmAction = ():void => {
                   alert("Action has been confirmed");
@@ -192,11 +192,11 @@ stories.add('Modal Warning with custom buttons', () => {
   { notes: `<h2> Warning modal with custom buttons</h2>
             When click on view model Warning with custom buttons model will open`+
             `<br>Source Code:` +
-            `<br><b>const buttons = [
+            `<br><b>const buttons: IModalButtonComponent[] = [
               { text: 'SAVE', type: ButtonType.warning, callback: this.onSaveAction, closeModal: true },
               { text: 'APPLY', type: ButtonType.warning, callback: this.onApplyAction },
               { text: 'CANCEL', type: ButtonType.warning, closeModal: true }
-            ] as ModalButtonComponent[];
+            ];
             this.modalService.openWarningModal('Warning modal title', 'Warning modal content', "WarningModalTestId", buttons);
             private onSaveAction = (): void => {
               alert("Action has been saved, modal will be close");
