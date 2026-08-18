@@ -115,7 +115,10 @@ export class AutoCompleteComponent implements OnInit {
         this.autoCompleteResults = this.autocompletePipe.transform(this.complexData, this.searchQuery);
     }
 
-    protected onClearSearch = (): void => {
+    // Public because subclasses bind it from their own templates (catalog-ui's CanvasSearchComponent
+    // does): under AOT the generated factory reads template-bound members from outside the class, so
+    // a protected member cannot be bound.
+    public onClearSearch = (): void => {
         this.autoCompleteResults = [];
         if (this.isItemSelected) {
             this.itemSelected.emit();

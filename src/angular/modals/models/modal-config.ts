@@ -12,7 +12,11 @@ export interface IModalConfig {
 
 export interface IModalButtonComponent extends IButtonComponent {
     id?: string;
-    callback?: () => void;
+    // Deliberately the loose `Function` rather than `() => void`: ModalButtonComponent declares
+    // `@Input() callback: Function`, and `Function` is not assignable to `() => void`. Narrowing
+    // here would stop callers from handing a real ModalButtonComponent instance to the
+    // ModalService shortcut methods, which accept this interface.
+    callback?: Function;
     closeModal?: boolean;
 }
 
