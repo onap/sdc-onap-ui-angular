@@ -116,7 +116,7 @@ jobs:
       # before Build ensures dist/ survives into npm publish.
       - name: Create authenticated .npmrc (snapshot)
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/node-create-npmrc-action@ec0cc1fa52dea5205897d0e3b25dfaf4ebe095fe # v0.1.2
+        uses: lfreleng-actions/node-create-npmrc-action@e0ff8adfc0591c86d8d07828bffab10f43096155 # v0.2.0
         with:
           registry_url: "https://nexus3.onap.org/repository/npm.snapshot/"
           nexus_user: "sdc-onap-ui-angular"
@@ -200,7 +200,7 @@ jobs:
       # before Build ensures dist/ survives into npm publish.
       - name: Create authenticated .npmrc (release)
         # yamllint disable-line rule:line-length
-        uses: lfreleng-actions/node-create-npmrc-action@ec0cc1fa52dea5205897d0e3b25dfaf4ebe095fe # v0.1.2
+        uses: lfreleng-actions/node-create-npmrc-action@e0ff8adfc0591c86d8d07828bffab10f43096155 # v0.2.0
         with:
           registry_url: "https://nexus3.onap.org/repository/npm.release/"
           nexus_user: "sdc-onap-ui-angular"
