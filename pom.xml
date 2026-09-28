@@ -12,9 +12,12 @@
     <nexus.proxy>https://nexus.onap.org</nexus.proxy>
     <staging.profile.id>176c31dfe190a</staging.profile.id>
 
-    <sonar.typescript.node>node/node</sonar.typescript.node>
     <sonar.sources>src/angular</sonar.sources>
-    <sonar.exclusions>src/angular/**/*.ts</sonar.exclusions>
+    <sonar.exclusions>src/angular/**/*.spec.ts,src/angular/**/__mocks__/**,src/angular/test.ts,src/angular/jest-setup.ts,src/angular/polyfills.ts,src/angular/storyshots.d.ts,src/angular/index.html</sonar.exclusions>
+    <sonar.tests>src/angular</sonar.tests>
+    <sonar.test.inclusions>src/angular/**/*.spec.ts</sonar.test.inclusions>
+    <sonar.coverage.exclusions>src/angular/**/*.html.ts,src/angular/**/*.d.ts,src/angular/**/index.ts,src/angular/**/*.module.ts,src/angular/components.ts,src/angular/services.ts</sonar.coverage.exclusions>
+    <sonar.javascript.lcov.reportPaths>coverage/lcov.info</sonar.javascript.lcov.reportPaths>
   </properties>
 
   <build>
@@ -56,8 +59,8 @@
               <goal>install-node-and-npm</goal>
             </goals>
             <configuration>
-              <nodeVersion>v8.11.4</nodeVersion>
-              <npmVersion>5.6.0</npmVersion>
+              <nodeVersion>v10.24.1</nodeVersion>
+              <npmVersion>6.14.12</npmVersion>
             </configuration>
           </execution>
 
