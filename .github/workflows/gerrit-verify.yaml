@@ -104,6 +104,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # tslint.json only fails on the rules the codebase already satisfies;
+      # rules with existing violations are either off or at warning severity,
+      # so warnings in this step's log are known debt, not a regression.
+      - name: Lint library sources
+        run: npm run lint:src
+
+      - name: Lint stories
+        run: npm run lint:stories
+
       - name: Build library
         run: npm run build
 
