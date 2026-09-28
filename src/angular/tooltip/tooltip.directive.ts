@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, OnInit, Input, Renderer, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, HostListener, OnDestroy, OnInit, Input, Renderer, TemplateRef } from '@angular/core';
 import { TooltipTemplateComponent } from './tooltip-template.component';
 import { CreateDynamicComponentService } from '../utils/create-dynamic-component.service';
 
@@ -12,7 +12,7 @@ const centerMiddleSuffix = 'center__middle';
 @Directive({
     selector: '[sdc-tooltip]'
 })
-export class TooltipDirective implements OnInit {
+export class TooltipDirective implements OnInit, OnDestroy {
     @Input('tooltip-text') public text;
     @Input('tooltip-placement') public placement: TooltipPlacement = TooltipPlacement.Top;
     @Input('tooltip-css-class') public customCssClass: string;
@@ -64,6 +64,13 @@ export class TooltipDirective implements OnInit {
         this.initScrollEvent();
     }
 
+    ngOnDestroy(): void {
+        this.deactivateScrollEvent();
+        if (this.tooltipTemplateContainer) {
+            this.destroy();
+        }
+    }
+
     private get ScreenWidth() {
         return document.documentElement.clientWidth;
     }
@@ -73,7 +80,7 @@ export class TooltipDirective implements OnInit {
     }
 
     private create() {
-            this.tooltipTemplateContainer = this.service.createComponentDynamically(TooltipTemplateComponent, document.body);
+            this.tooltipTemplateContainer = this.service.createComponentDynamically(TooltipTemplateComponent, {}, document.body);
 
             /**
              * Creating a view (injecting our template) from template in our component.
@@ -94,6 +101,7 @@ export class TooltipDirective implements OnInit {
 
     private destroy() {
         this.tooltipTemplateContainer.destroy();
+        this.tooltipTemplateContainer = null;
         this.tooltip = null;
     }
 
@@ -422,7 +430,9 @@ export class TooltipDirective implements OnInit {
     private initScrollEvent() {
         this.scrollEventHandler = this.debounce(() => {
             try {
-                this.setPosition();
+                if (this.tooltip) {
+                    this.setPosition();
+                }
             } catch (e) {
 
             }
