@@ -1,9 +1,10 @@
-import { OnInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import { OnInit, OnDestroy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AutocompletePipe } from "./autocomplete.pipe";
 import { template } from "./autocomplete.component.html";
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import {IDropDownOption} from "../form-elements/dropdown/dropdown-models";
 
 @Component({
@@ -23,7 +24,7 @@ import {IDropDownOption} from "../form-elements/dropdown/dropdown-models";
         ]),
     ]
 })
-export class AutoCompleteComponent implements OnInit {
+export class AutoCompleteComponent implements OnInit, OnDestroy {
     @Input() public data: any[] = [];
     @Input() public dataSchema: IDropDownOption;
     @Input() public dataUrl: string;
@@ -41,8 +42,17 @@ export class AutoCompleteComponent implements OnInit {
     protected complexData: any[] = [];
     public autoCompleteResults: any[] = [];
     private isItemSelected: boolean = false;
+    private remoteQueries: Subject<string> = new Subject<string>();
+    private remoteResultsSubscription: Subscription;
 
     public constructor(protected http: HttpClient, protected autocompletePipe: AutocompletePipe) {
+        this.remoteResultsSubscription = this.remoteQueries
+            .pipe(switchMap((query: string) => query ? this.fetchRemoteData(query) : EMPTY))
+            .subscribe((response: any[]) => {
+                this.data = JSON.parse(JSON.stringify(response));
+                this.handleLocalData();
+                this.autoCompleteResults = this.complexData;
+            });
     }
 
     public ngOnInit(): void {
@@ -53,6 +63,10 @@ export class AutoCompleteComponent implements OnInit {
           this.searchQuery = this.initialValue;
           this.isItemSelected = true;
         }
+    }
+
+    public ngOnDestroy(): void {
+        this.remoteResultsSubscription.unsubscribe();
     }
 
     public handleLocalData = (): void => {
@@ -82,6 +96,7 @@ export class AutoCompleteComponent implements OnInit {
     protected onItemSelected = (selectedItem: IDropDownOption): void => {
         this.searchQuery = selectedItem.value;
         this.isItemSelected = true;
+        this.remoteQueries.next('');
         this.autoCompleteResults = [];
         this.itemSelected.emit(selectedItem.value);
     }
@@ -93,19 +108,19 @@ export class AutoCompleteComponent implements OnInit {
                 this.onClearSearch();
             } else {
                 if (this.dataUrl) {
-                    const params = {'searchQuery': this.searchQuery};
-                    this.http.get(this.dataUrl, {params: params})
-                        .pipe(map((response) => {
-                            this.data = JSON.parse(JSON.stringify(response));
-                            this.handleLocalData();
-                            this.autoCompleteResults = this.complexData;
-                        })).subscribe();
+                    this.remoteQueries.next(this.searchQuery);
                 } else {
                     this.autoCompleteResults = this.autocompletePipe.transform(this.complexData, this.searchQuery);
                 }
             }
             this.isItemSelected = false;
         }
+    }
+
+    private fetchRemoteData(query: string): Observable<any[]> {
+        const params = {'searchQuery': query};
+        return this.http.get<any[]>(this.dataUrl, {params: params})
+            .pipe(catchError<any[], any[]>(() => of([])));
     }
 
     public onRightItemClicked() {
@@ -116,6 +131,7 @@ export class AutoCompleteComponent implements OnInit {
     }
 
     protected onClearSearch = (): void => {
+        this.remoteQueries.next('');
         this.autoCompleteResults = [];
         if (this.isItemSelected) {
             this.itemSelected.emit();
