@@ -55,8 +55,6 @@ module.exports = {
         '!src/angular/**/*.module.ts',
         '!src/angular/components.ts',
         '!src/angular/services.ts',
-        '!src/angular/test.ts',
-        '!src/angular/polyfills.ts',
         '!src/angular/jest-setup.ts',
         '!src/angular/**/__mocks__/**',
     ],

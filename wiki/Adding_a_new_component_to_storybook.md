@@ -58,5 +58,3 @@ storiesOf('Category|MyComponent', module)
 
 ## 3. Run storybook
 The final step is to run storybook and make sure everything is working. just run `npm run storybook` to get a local server running, and direct your browser to the outputted address.
-
-If you want to deploy storybook to your fork's github pages, follow [Deploying storybook to a fork's github pages](https://github.com/onap-sdc/onap-ui-common/wiki/Deploying-storybook-to-a-fork's-github-pages).

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { template } from "./number-input.component.html";
 import { BaseTextElementComponent } from "../base-text-element.component";
-import 'rxjs/add/operator/debounceTime';
 import {RegexPatterns} from "../../../common/enums";
 import {isFirefox, isIEOrEdge} from "../../../utils/browser-utils";
 
