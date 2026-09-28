@@ -26,7 +26,7 @@
   "dependencies": {
     "angular-base64-upload": "^0.1.23",
     "core-js": "^2.5.7",
-    "onap-ui-common": "1.0.119",
+    "onap-ui-common": "1.1.0",
     "rxjs-compat": "^6.2.0"
   },
   "devDependencies": {
