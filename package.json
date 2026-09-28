@@ -20,7 +20,7 @@
     "test:watch": "jest --config jest.config.js --watch"
   },
   "dependencies": {
-    "onap-ui-common": "1.0.119"
+    "onap-ui-common": "1.1.0"
   },
   "devDependencies": {
     "@angular/animations": "^6.0.3",
