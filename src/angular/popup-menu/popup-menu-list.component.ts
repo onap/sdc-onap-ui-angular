@@ -49,7 +49,7 @@ export class PopupMenuListComponent implements AfterContentInit {
 
     public ngAfterContentInit() {
         this._updateMenuItemsList(this.menuItems);
-        this.menuItems.changes.subscribe(this._updateMenuItemsList);
+        this.menuItems.changes.subscribe((menuItemsList) => this._updateMenuItemsList(menuItemsList));
     }
 
     private _updateMenuItemsList(menuItemsList: QueryList<PopupMenuItemComponent>) {
