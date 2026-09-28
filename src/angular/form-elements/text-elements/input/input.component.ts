@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { template } from "./input.component.html";
 import { BaseTextElementComponent } from "../base-text-element.component";
-import 'rxjs/add/operator/debounceTime';
 
 let nextInputId = 0;
 

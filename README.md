@@ -84,13 +84,11 @@ You can import these files to your project and get the same color scheme and var
 ### Running storybook
 The components in this library are displayed via [storybook](https://github.com/storybooks/storybook). Head to [http://onap-sdc.github.io/onap-ui-angular](http://onap-sdc.github.io/onap-ui-angular) to see the components that are in `master`.
 
-While developing, just run `npm run storybook` in your terminal to launch a local storybook server where you can see your changes. For deploying storybook to your own fork repository, refer to the guides section below.
+While developing, just run `npm run storybook` in your terminal to launch a local storybook server where you can see your changes.
 
 
 ### Useful guides
 [Adding a new component](https://github.com/onap-sdc/onap-ui-angular/wiki/Adding-a-new-component)
-
-[Deploying storybook to a fork's github pages](https://github.com/onap-sdc/onap-ui-angular/wiki/Deploying-storybook-to-a-fork's-github-pages)
 
 [Understanding project build](https://github.com/onap-sdc/onap-ui-angular/wiki/Understanding-project-build)
 

@@ -6,15 +6,14 @@ Great document clarify build process: https://medium.com/@trekhleb/how-to-create
 
 ## Two main builds:
 1. Build onap-ui-angular project as NPM module (npm run build), so 3rd parties can use it.
-2. Build onap-ui-angular for storybook (npm run storybook:build), to show the components in github pages.
+2. Build onap-ui-angular for storybook (npm run storybook:build), a static gallery of the components.
 
 ## package.json scripts
 build: main build of the project
 build:ngc: run ngc and comoile the typescript files (using NGC)
 build:umd: build 4 UMD bundled files using webpack
 storybook: start the storybook server
-storybook:prebuild: ?
-storybook:build: build the storybook code for using in github pages
+storybook:build: build the static storybook into .storybook-out
 
 
 ## Exclude Angular core from the bundle
