@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/angular';
-import '!style-loader!css-loader!sass-loader!./styles.scss';
+import './styles.scss';
 
 storiesOf('Welcome', module).add('to Storybook', () => ({
   template: `

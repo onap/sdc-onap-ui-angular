@@ -2,7 +2,7 @@
 //
 // Runs the existing Angular TestBed specs headlessly (jsdom) via
 // jest-preset-angular, so no browser or Karma runner is required. The build
-// pipeline (ngc + webpack UMD, pinned to legacy Node for node-sass) is
+// pipeline (ngc + webpack UMD, pinned to legacy Node) is
 // independent of this and is unaffected.
 //
 // Two families of tests run here:
@@ -34,9 +34,9 @@ module.exports = {
         // so the unused top-level requires don't throw MODULE_NOT_FOUND.
         '^@storybook/react/options$': '<rootDir>/src/angular/__mocks__/storyshots-react-stub.js',
         '^react-test-renderer(/.*)?$': '<rootDir>/src/angular/__mocks__/storyshots-react-stub.js',
-        // The Storybook welcome story imports global SCSS via webpack loader
-        // syntax (`!style-loader!css-loader!sass-loader!./styles.scss`). Jest has
-        // no webpack loaders, so stub the stylesheet import to an empty module.
+        // The Storybook welcome story imports its SCSS (`./styles.scss`), which
+        // only webpack can compile. Jest has no webpack loaders, so stub the
+        // stylesheet import to an empty module.
         '\\.scss$': '<rootDir>/src/angular/__mocks__/storyshots-react-stub.js',
     },
     testMatch: ['**/*.spec.ts'],
