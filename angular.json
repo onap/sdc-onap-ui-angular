@@ -11,6 +11,7 @@
           "options": {
             "outputPath": "dist/onap-ui-angular",
             "styles": [
+              "node_modules/onap-ui-common/lib/style.css",
               "src/assets/styles/style.scss"
             ],
             "scripts": []
