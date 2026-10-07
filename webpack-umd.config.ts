@@ -48,11 +48,6 @@ export default {
       },
 
       {
-        test: /\.json$/,
-        use: 'json-loader'
-      },
-
-      {
         test: /\.css$/,
         use: ['to-string-loader', 'css-loader']
       },
