@@ -45,7 +45,7 @@
     "css-loader": "^0.28.11",
     "jest": "^23.6.0",
     "jest-preset-angular": "^6.0.1",
-    "onap-ui-common": "1.1.0",
+    "onap-ui-common": "1.1.2",
     "rimraf": "^2.6.2",
     "rxjs": "6.0.0",
     "sass": "~1.48.0",
