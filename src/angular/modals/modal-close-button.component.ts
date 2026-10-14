@@ -9,6 +9,8 @@ import { ButtonComponent } from "../buttons/button.component";
     template: `
     <div class="sdc-modal__close-button"
         SdcRippleClickAnimation
+        sdcKeyboardClick [sdcKeyboardClickDisabled]="disabled"
+        aria-label="Close"
         [ngClass]="disabled ? 'disabled' : ''"
         [rippleOnAction]="!disabled && rippleAnimationAction"
         [attr.data-tests-id]="testId"

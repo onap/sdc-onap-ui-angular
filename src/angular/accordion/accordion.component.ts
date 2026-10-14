@@ -7,6 +7,7 @@ import { template } from './accordion.component.html';
     template: template,
 })
 export class AccordionComponent {
+    private static nextId = 0;
 
     @Input('arrow-direction') arrowDirection: Placement;
     @Input('css-class') customCSSClass: string;
@@ -16,6 +17,7 @@ export class AccordionComponent {
     @Input() public testId: string;
 
     public accordionArrowDirection = Placement;
+    public bodyId = 'sdc-accordion-body-' + (AccordionComponent.nextId++);
 
     public toggleAccordion(){
         this.open = !this.open;
