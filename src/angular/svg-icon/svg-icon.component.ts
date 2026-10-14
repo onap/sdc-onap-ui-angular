@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, HostBinding, HostListener, ElementRef } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChanges, HostBinding } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Mode, Size, BackgroundShape, BackgroundColor } from "../common/enums";
 import { iconsMap } from 'onap-ui-common';
@@ -8,7 +8,7 @@ import { template } from './svg-icon.component.html';
     selector: 'svg-icon',
     template: template
 })
-export class SvgIconComponent implements OnChanges, OnInit, OnDestroy {
+export class SvgIconComponent implements OnChanges {
 
     @Input() public name: string;
     @Input() public type: string;
@@ -27,58 +27,14 @@ export class SvgIconComponent implements OnChanges, OnInit, OnDestroy {
     public svgIconCustomClassName: string;
     public classes: string;
 
-    constructor(protected domSanitizer: DomSanitizer, protected hostEl: ElementRef) {
+    constructor(protected domSanitizer: DomSanitizer) {
         this.size = Size.medium;
         this.disabled = false;
         this.type = this.type || "common";
     }
 
-    @HostBinding('attr.role') get hostRole(): string {
-        return this.isKeyboardButton() ? 'button' : null;
-    }
-
-    @HostBinding('attr.tabindex') get hostTabindex(): string {
-        return this.isKeyboardButton() ? (this.disabled ? '-1' : '0') : null;
-    }
-
-    @HostBinding('attr.aria-disabled') get hostAriaDisabled(): string {
-        return this.isKeyboardButton() && this.disabled ? 'true' : null;
-    }
-
-    @HostBinding('attr.aria-label') get hostAriaLabel(): string {
-        return this.isKeyboardButton() && this.ariaLabel ? this.ariaLabel : null;
-    }
-
     @HostBinding('attr.aria-hidden') get hostAriaHidden(): string {
         return this.isDecorative() ? 'true' : null;
-    }
-
-    @HostListener('keydown', ['$event'])
-    public onHostKeydown(event: KeyboardEvent): void {
-        if (!this.isKeyboardButton() || this.disabled || event.repeat || event.target !== this.hostEl.nativeElement) {
-            return;
-        }
-        if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
-            event.preventDefault();
-            this.hostEl.nativeElement.click();
-        }
-    }
-
-    // Capture phase on the host rather than a HostListener: Angular dispatches a component's host
-    // listener and the consumer's (click) from one DOM listener, so a HostListener cannot cancel it.
-    private blockDisabledClick = (event: MouseEvent): void => {
-        if (this.isKeyboardButton() && this.disabled) {
-            event.stopImmediatePropagation();
-            event.preventDefault();
-        }
-    }
-
-    public ngOnInit(): void {
-        this.hostEl.nativeElement.addEventListener('click', this.blockDisabledClick, true);
-    }
-
-    public ngOnDestroy(): void {
-        this.hostEl.nativeElement.removeEventListener('click', this.blockDisabledClick, true);
     }
 
     static Icons(): { [key: string]: string } {
@@ -90,12 +46,13 @@ export class SvgIconComponent implements OnChanges, OnInit, OnDestroy {
         this.buildClasses();
     }
 
-    protected isKeyboardButton(): boolean {
-        return !!this.clickable;
+    // Consumers pass clickable="false" as a truthy string, so only a real true or "true" renders a button.
+    public isButton(): boolean {
+        return this.clickable === true || (this.clickable as any) === 'true';
     }
 
     protected isDecorative(): boolean {
-        return !this.clickable;
+        return !this.isButton();
     }
 
     protected updateSvgIconByName() {

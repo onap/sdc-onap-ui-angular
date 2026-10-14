@@ -15,6 +15,7 @@ export class AccordionComponent {
     @Input('open') open: boolean;
     @Output('accordionChanged') changed = new EventEmitter<boolean>();
     @Input() public testId: string;
+    @Input() public disabled: boolean;
 
     public accordionArrowDirection = Placement;
     public bodyId = 'sdc-accordion-body-' + (AccordionComponent.nextId++);

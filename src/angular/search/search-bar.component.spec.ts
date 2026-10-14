@@ -31,7 +31,7 @@ class HostComponent { searches = 0; }
 describe('SearchBarComponent accessibility', () => {
     let f: ComponentFixture<HostComponent>;
     const input = (id: string) => f.nativeElement.querySelector('#' + id + ' input') as HTMLInputElement;
-    const button = (id: string) => f.nativeElement.querySelector('#' + id + ' svg-icon') as HTMLElement;
+    const button = (id: string) => f.nativeElement.querySelector('#' + id + ' svg-icon button') as HTMLButtonElement;
     beforeEach(() => {
         TestBed.configureTestingModule({ imports: [SearchModule], declarations: [HostComponent] });
         f = TestBed.createComponent(HostComponent);
@@ -44,14 +44,15 @@ describe('SearchBarComponent accessibility', () => {
         expect(input('plain').getAttribute('aria-label')).toBe('Search');
     });
 
-    it('the search icon is a named button', () => {
-        expect(button('plain').getAttribute('role')).toBe('button');
+    it('the search icon is a named native button', () => {
+        expect(button('plain').tagName).toBe('BUTTON');
+        expect(button('plain').getAttribute('type')).toBe('button');
         expect(button('plain').getAttribute('aria-label')).toBe('Search');
         expect(button('named').getAttribute('aria-label')).toBe('Run search');
     });
 
-    it('Enter on the search icon emits onSearchClicked once', () => {
-        button('plain').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    it('a click on the search button emits onSearchClicked once', () => {
+        button('plain').click();
         expect(f.componentInstance.searches).toBe(1);
     });
 });

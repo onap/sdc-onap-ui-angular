@@ -23,9 +23,10 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { SvgIconModule } from './svg-icon.module';
 
 @Component({ template: `
-    <svg-icon id="c" name="close" [clickable]="true" ariaLabel="Close" (click)="n = n + 1"></svg-icon>
+    <svg-icon id="c" name="close" [clickable]="true" ariaLabel="Close" testId="close-icon" (click)="n = n + 1"></svg-icon>
     <svg-icon id="d" name="close" [clickable]="true" [disabled]="true" (click)="n = n + 1"></svg-icon>
     <svg-icon id="p" name="close"></svg-icon>
+    <svg-icon id="f" name="close" clickable="false"></svg-icon>
     <svg-icon-label id="l" name="close" clickable="false" label="Update Failed"></svg-icon-label>
     <svg-icon-label id="m" name="alert-triangle" label="Required"></svg-icon-label>
     <svg-icon-label id="a" name="plus" [clickable]="true" label="Add Artifact" (click)="added = added + 1"></svg-icon-label>
@@ -35,57 +36,87 @@ class HostComponent { n = 0; added = 0; }
 describe('SvgIconComponent accessibility', () => {
     let f: ComponentFixture<HostComponent>;
     const el = (id: string) => f.nativeElement.querySelector('#' + id) as HTMLElement;
+    const inner = (id: string) => el(id).firstElementChild as HTMLButtonElement;
+    const hostAttrs = ['role', 'tabindex', 'aria-disabled', 'aria-label'];
     beforeEach(() => {
         TestBed.configureTestingModule({ imports: [SvgIconModule], declarations: [HostComponent] });
         f = TestBed.createComponent(HostComponent);
         f.detectChanges();
     });
 
-    it('a clickable icon is a named, focusable button that Enter activates', () => {
-        expect(el('c').getAttribute('role')).toBe('button');
-        expect(el('c').getAttribute('tabindex')).toBe('0');
-        expect(el('c').getAttribute('aria-label')).toBe('Close');
-        el('c').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    it('a clickable icon renders a named native button and leaves the host plain', () => {
+        expect(inner('c').tagName).toBe('BUTTON');
+        expect(inner('c').getAttribute('type')).toBe('button');
+        expect(inner('c').getAttribute('class')).toBe('svg-icon-wrapper');
+        expect(inner('c').getAttribute('aria-label')).toBe('Close');
+        expect(inner('c').getAttribute('data-tests-id')).toBe('close-icon');
+        expect(inner('c').disabled).toBe(false);
+        const icon = inner('c').firstElementChild;
+        expect(icon.tagName).toBe('SPAN');
+        expect(icon.classList.contains('svg-icon')).toBe(true);
+        expect(icon.classList.contains('clickable')).toBe(true);
+        expect(icon.hasAttribute('data-tests-id')).toBe(false);
+        expect(icon.querySelector('svg')).not.toBeNull();
+        hostAttrs.forEach(a => expect(el('c').hasAttribute(a)).toBe(false));
+        expect(el('c').hasAttribute('aria-hidden')).toBe(false);
+    });
+
+    it("a click on the icon's button reaches the consumer's (click) on the host once", () => {
+        inner('c').click();
         expect(f.componentInstance.n).toBe(1);
     });
 
-    it('a clickable icon ignores auto-repeated keydowns', () => {
-        el('c').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, repeat: true }));
-        expect(f.componentInstance.n).toBe(0);
+    it('a disabled clickable icon is a disabled native button', () => {
+        expect(inner('d').tagName).toBe('BUTTON');
+        expect(inner('d').disabled).toBe(true);
+        expect(inner('d').firstElementChild.hasAttribute('disabled')).toBe(false);
+        expect(inner('d').firstElementChild.classList.contains('clickable')).toBe(false);
+        expect(inner('d').hasAttribute('aria-label')).toBe(false);
+        hostAttrs.forEach(a => expect(el('d').hasAttribute(a)).toBe(false));
     });
 
-    it('a disabled clickable icon is out of the tab order and inert', () => {
-        expect(el('d').getAttribute('tabindex')).toBe('-1');
-        expect(el('d').getAttribute('aria-disabled')).toBe('true');
-        el('d').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-        expect(f.componentInstance.n).toBe(0);
-    });
-
-    it('a presentational icon is hidden from assistive tech and not focusable', () => {
+    it('a presentational icon is a span, hidden from assistive tech and not focusable', () => {
         expect(el('p').getAttribute('aria-hidden')).toBe('true');
+        expect(inner('p').tagName).toBe('SPAN');
+        expect(el('p').querySelector('button, [tabindex], [role]')).toBeNull();
         expect(el('p').hasAttribute('tabindex')).toBe(false);
         expect(el('p').hasAttribute('role')).toBe(false);
     });
 
-    it('a label icon keeps its text exposed and does not become a tab stop', () => {
+    it('clickable="false" renders a plain hidden icon, not a button', () => {
+        expect(el('f').querySelector('button')).toBeNull();
+        expect(inner('f').tagName).toBe('SPAN');
+        expect(el('f').getAttribute('aria-hidden')).toBe('true');
+    });
+
+    it('a clickable icon or label button contains no div', () => {
+        ['c', 'd', 'a', 's'].forEach(id => expect(inner(id).querySelector('div')).toBeNull());
+    });
+
+    it('a label icon keeps its text exposed and does not become a button', () => {
         expect(el('m').hasAttribute('aria-hidden')).toBe(false);
         expect(el('l').hasAttribute('aria-hidden')).toBe(false);
+        expect(el('l').querySelector('button')).toBeNull();
+        expect(inner('l').tagName).toBe('SPAN');
         expect(el('l').hasAttribute('tabindex')).toBe(false);
         expect(el('l').hasAttribute('role')).toBe(false);
     });
 
-    it('a clickable label is a keyboard button named by its text, with no nested tab stop', () => {
+    it('a clickable label is a native button named by its text, with no nested tab stop', () => {
         ['a', 's'].forEach(id => {
-            expect(el(id).getAttribute('role')).toBe('button');
-            expect(el(id).getAttribute('tabindex')).toBe('0');
-            expect(el(id).hasAttribute('aria-label')).toBe(false);
+            const button = inner(id);
+            expect(button.tagName).toBe('BUTTON');
+            expect(button.getAttribute('type')).toBe('button');
+            expect(button.classList.contains('svg-icon-wrapper')).toBe(true);
+            expect(button.hasAttribute('aria-label')).toBe(false);
+            hostAttrs.forEach(a => expect(el(id).hasAttribute(a)).toBe(false));
             expect(el(id).hasAttribute('aria-hidden')).toBe(false);
-            const inner = el(id).querySelector('svg-icon');
-            expect(inner.getAttribute('aria-hidden')).toBe('true');
-            expect(inner.hasAttribute('tabindex')).toBe(false);
-            expect(el(id).textContent).toContain(id === 'a' ? 'Add Artifact' : 'Add');
+            const icon = button.querySelector('svg-icon');
+            expect(icon.getAttribute('aria-hidden')).toBe('true');
+            expect(icon.querySelector('button')).toBeNull();
+            expect(button.querySelector('.svg-icon-label').textContent).toBe(id === 'a' ? 'Add Artifact' : 'Add');
         });
-        el('a').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        inner('a').click();
         expect(f.componentInstance.added).toBe(1);
     });
 });
@@ -99,30 +130,30 @@ class DisabledHostComponent { n = 0; outer = 0; off = true; }
 
 describe('SvgIconComponent disabled mouse clicks', () => {
     let f: ComponentFixture<DisabledHostComponent>;
-    // Click the rendered icon, which is what a mouse hits: jsdom 11 runs listeners at the target in
-    // registration order, so a click dispatched on the host itself reaches the consumer handler first.
-    const icon = (id: string) => f.nativeElement.querySelector('#' + id + ' .svg-icon') as HTMLElement;
+    const button = (id: string) => f.nativeElement.querySelector('#' + id + ' button') as HTMLButtonElement;
     beforeEach(() => {
         TestBed.configureTestingModule({ imports: [SvgIconModule], declarations: [DisabledHostComponent] });
         f = TestBed.createComponent(DisabledHostComponent);
         f.detectChanges();
     });
 
-    it('a disabled clickable icon swallows the click before the consumer and its ancestors see it', () => {
-        icon('x').click();
+    it('a click on a disabled clickable icon reaches neither the consumer nor its ancestors', () => {
+        button('x').click();
         expect(f.componentInstance.n).toBe(0);
         expect(f.componentInstance.outer).toBe(0);
     });
 
-    it('a disabled clickable label swallows the click', () => {
-        icon('y').click();
+    it('a click on a disabled clickable label reaches no consumer', () => {
+        expect(button('y').disabled).toBe(true);
+        button('y').click();
         expect(f.componentInstance.n).toBe(0);
     });
 
     it('a re-enabled icon passes clicks through again', () => {
         f.componentInstance.off = false;
         f.detectChanges();
-        icon('x').click();
+        expect(button('x').disabled).toBe(false);
+        button('x').click();
         expect(f.componentInstance.n).toBe(1);
         expect(f.componentInstance.outer).toBe(1);
     });

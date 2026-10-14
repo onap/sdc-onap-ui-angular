@@ -51,12 +51,6 @@ export class TabsComponent implements AfterContentInit {
             target = this.nextEnabled(list, -1, 1);
         } else if (event.key === 'End') {
             target = this.nextEnabled(list, list.length, -1);
-        } else if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
-            event.preventDefault();
-            if (!event.repeat) {
-                this.selectTab(list[index]);
-            }
-            return;
         }
         if (target < 0) {
             return;
@@ -64,9 +58,9 @@ export class TabsComponent implements AfterContentInit {
         event.preventDefault();
         this.selectTab(list[target]);
         // A tab panel can project another sdc-tabs, so only this list's own items count.
-        const items = (event.currentTarget as HTMLElement).parentElement.children;
-        const item = items[target] as HTMLElement;
-        setTimeout(() => item.focus());
+        const items = (event.currentTarget as HTMLElement).parentElement.parentElement.children;
+        const button = items[target].querySelector('.sdc-tab__button') as HTMLElement;
+        setTimeout(() => button.focus());
     }
 
     private nextEnabled(list: TabComponent[], from: number, step: number): number {

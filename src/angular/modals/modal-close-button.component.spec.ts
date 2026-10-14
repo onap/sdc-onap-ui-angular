@@ -30,8 +30,7 @@ import { ModalService } from './modal.service';
 describe('ModalCloseButtonComponent accessibility', () => {
     let f: ComponentFixture<ModalCloseButtonComponent>;
     let closeModal: jest.Mock;
-    const button = () => f.nativeElement.querySelector('.sdc-modal__close-button') as HTMLElement;
-    const enter = () => button().dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    const button = () => f.nativeElement.querySelector('.sdc-modal__close-button') as HTMLButtonElement;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -45,21 +44,25 @@ describe('ModalCloseButtonComponent accessibility', () => {
         f.detectChanges();
     });
 
-    it('is a named keyboard button that closes the modal on Enter', () => {
-        expect(button().getAttribute('role')).toBe('button');
-        expect(button().getAttribute('tabindex')).toBe('0');
+    it('is a named native button that closes the modal on click', () => {
+        expect(button().tagName).toBe('BUTTON');
+        expect(button().getAttribute('type')).toBe('button');
         expect(button().getAttribute('aria-label')).toBe('Close');
-        enter();
+        expect(button().getAttribute('class')).toBe('svg-icon-wrapper sdc-modal__close-button-svg sdc-modal__close-button bottom');
+        expect(button().querySelector('svg-icon').getAttribute('aria-hidden')).toBe('true');
+        expect(button().querySelector('div')).toBeNull();
+        ['role', 'tabindex'].forEach(a => expect(button().hasAttribute(a)).toBe(false));
+        button().click();
         expect(closeModal).toHaveBeenCalledTimes(1);
         expect(closeModal).toHaveBeenCalledWith('close');
     });
 
-    it('is inert and out of the tab order while disabled', () => {
+    it('is a disabled native button that ignores clicks while disabled', () => {
         f.componentInstance.disabled = true;
         f.detectChanges();
-        enter();
+        expect(button().disabled).toBe(true);
+        expect(button().classList.contains('disabled')).toBe(true);
+        button().click();
         expect(closeModal).not.toHaveBeenCalled();
-        expect(button().getAttribute('tabindex')).toBe('-1');
-        expect(button().getAttribute('aria-disabled')).toBe('true');
     });
 });

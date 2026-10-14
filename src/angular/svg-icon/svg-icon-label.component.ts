@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { SvgIconComponent } from './svg-icon.component';
 import {Placement, Size} from "../common/enums";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
@@ -16,18 +16,12 @@ export class SvgIconLabelComponent extends SvgIconComponent {
     @Input() public size: Size;
     @Input() public testId: string;
 
-    constructor(protected domSanitizer: DomSanitizer, protected hostEl: ElementRef) {
-        super(domSanitizer, hostEl);
+    constructor(protected domSanitizer: DomSanitizer) {
+        super(domSanitizer);
         this.labelPlacement = Placement.left;
     }
 
-    // The host bindings are inherited from SvgIconComponent. A label host must not be hidden,
-    // because it carries visible text (validation messages), and consumers pass clickable="false"
-    // as a truthy string, so only a real true or "true" may turn it into a tab stop.
-    protected isKeyboardButton(): boolean {
-        return this.clickable === true || (this.clickable as any) === 'true';
-    }
-
+    // A label host must not be hidden, because it carries visible text (validation messages).
     protected isDecorative(): boolean {
         return false;
     }

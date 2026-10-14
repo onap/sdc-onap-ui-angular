@@ -7,9 +7,9 @@ import { ButtonComponent } from "../buttons/button.component";
 @Component({
     selector: "sdc-modal-close-button",
     template: `
-    <div class="sdc-modal__close-button"
+    <button type="button" class="svg-icon-wrapper sdc-modal__close-button-svg sdc-modal__close-button bottom"
         SdcRippleClickAnimation
-        sdcKeyboardClick [sdcKeyboardClickDisabled]="disabled"
+        [disabled]="!!disabled"
         aria-label="Close"
         [ngClass]="disabled ? 'disabled' : ''"
         [rippleOnAction]="!disabled && rippleAnimationAction"
@@ -17,7 +17,7 @@ import { ButtonComponent } from "../buttons/button.component";
         (click)="!disabled && closeModal('close')"
         >
         <svg-icon name="close" [mode]="disabled? 'secondary' : 'info'" size="medium"></svg-icon>
-    </div>
+    </button>
     `
 })
 export class ModalCloseButtonComponent extends ButtonComponent {

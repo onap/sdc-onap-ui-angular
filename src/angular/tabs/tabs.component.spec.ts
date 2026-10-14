@@ -124,11 +124,37 @@ describe('TabsComponent keyboard pattern', () => {
         expect(panels().map((p) => p.hidden)).toEqual([false, true, true]);
     });
 
+    it('renders each tab as a native button inside a presentational li that keeps the styling', () => {
+        const items = Array.from(f.nativeElement.querySelectorAll('.sdc-tabs-list > li')) as HTMLElement[];
+        expect(items.length).toBe(3);
+        items.forEach((li, i) => {
+            expect(li.getAttribute('role')).toBe('presentation');
+            expect(li.classList.contains('sdc-tab')).toBe(true);
+            ['tabindex', 'aria-selected', 'aria-controls', 'id', 'disabled'].forEach(a => expect(li.hasAttribute(a)).toBe(false));
+            const button = li.firstElementChild as HTMLButtonElement;
+            expect(button).toBe(tabs()[i]);
+            expect(button.tagName).toBe('BUTTON');
+            expect(button.getAttribute('type')).toBe('button');
+            expect(button.classList.contains('sdc-tab__button')).toBe(true);
+        });
+        expect(items.map((li) => li.classList.contains('sdc-tab-active'))).toEqual([true, false, false]);
+    });
+
     it('keeps the tab icon out of the tab order', () => {
         const icon = tabs()[0].querySelector('svg-icon-label');
         expect(icon).not.toBeNull();
         expect(tabs()[0].querySelectorAll('[tabindex]').length).toBe(0);
+        expect(tabs()[0].querySelector('button')).toBeNull();
+        expect(tabs()[0].querySelector('div')).toBeNull();
         expect(icon.hasAttribute('role')).toBe(false);
+    });
+
+    it('a click on a tab button selects it once and moves the roving tab stop', () => {
+        tabs()[2].click();
+        f.detectChanges();
+        expect(f.componentInstance.selected).toBe(1);
+        expect(tabs().map((t) => t.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true']);
+        expect(tabs().map((t) => t.getAttribute('tabindex'))).toEqual(['-1', '-1', '0']);
     });
 
     it('ArrowRight / ArrowLeft / Home / End move selection and focus, wrapping', fakeAsync(() => {
@@ -152,15 +178,12 @@ describe('TabsComponent keyboard pattern', () => {
         press('ArrowUp');    expect(document.activeElement).toBe(tabs()[0]);
     }));
 
-    it('Enter and Space select the focused tab once and Space does not scroll', fakeAsync(() => {
+    it('leaves Enter and Space to the native button, so a keydown alone selects nothing', fakeAsync(() => {
         tabs()[1].focus();
-        press('Enter');
-        expect(f.componentInstance.selected).toBe(1);
-        expect(tabs()[1].getAttribute('aria-selected')).toBe('true');
-        expect(press(' ').defaultPrevented).toBe(true);
-        expect(f.componentInstance.selected).toBe(2);
-        expect(press('Enter', { repeat: true }).defaultPrevented).toBe(true);
-        expect(f.componentInstance.selected).toBe(2);
+        expect(press('Enter').defaultPrevented).toBe(false);
+        expect(press(' ').defaultPrevented).toBe(false);
+        expect(f.componentInstance.selected).toBe(0);
+        expect(tabs()[1].getAttribute('aria-selected')).toBe('false');
     }));
 
     it('leaves modified arrows and other keys to the browser', fakeAsync(() => {
@@ -203,9 +226,9 @@ describe('TabsComponent disabled tabs', () => {
 
     it('exposes disabled tabs to assistive technology', () => {
         create(false, false);
-        expect(tabs().map((t) => t.getAttribute('aria-disabled'))).toEqual([null, 'true', null]);
-        expect(tabs().map((t) => t.hasAttribute('disabled'))).toEqual([false, true, false]);
+        expect(tabs().map((t) => (t as HTMLButtonElement).disabled)).toEqual([false, true, false]);
         expect(tabs()[1].getAttribute('tabindex')).toBe('-1');
+        expect(tabs()[1].parentElement.hasAttribute('disabled')).toBe(false);
     });
 
     it('arrows, Home and End skip disabled tabs', fakeAsync(() => {
@@ -226,13 +249,12 @@ describe('TabsComponent disabled tabs', () => {
         expect(tabs()[0].getAttribute('aria-selected')).toBe('true');
     }));
 
-    it('click and Enter do not activate a disabled tab', fakeAsync(() => {
+    it('a click on a disabled tab does not activate it', fakeAsync(() => {
         create(false, false);
+        expect((tabs()[1] as HTMLButtonElement).disabled).toBe(true);
+        expect(tabs()[1].getAttribute('tabindex')).toBe('-1');
         tabs()[1].click();
         f.detectChanges();
-        tabs()[1].focus();
-        press('Enter');
-        press(' ');
         expect(f.componentInstance.selected).toBe(0);
         expect(tabs().map((t) => t.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
     }));
@@ -245,7 +267,7 @@ describe('TabsComponent disabled tabs', () => {
 
 @Component({ template: `
     <sdc-tabs>
-        <sdc-tab titleIcon="info-circle" tooltipText="Information"></sdc-tab>
+        <sdc-tab titleIcon="info-circle" tooltipText="Information" testId="info-tab"></sdc-tab>
         <sdc-tab title="Properties" tooltipText="Edit properties"></sdc-tab>
     </sdc-tabs>` })
 class IconTabsHostComponent {}
@@ -255,9 +277,11 @@ describe('TabsComponent accessible names', () => {
         TestBed.configureTestingModule({ imports: [TabsModule], declarations: [IconTabsHostComponent] });
         const f = TestBed.createComponent(IconTabsHostComponent);
         f.detectChanges();
-        const tabs = f.nativeElement.querySelectorAll('li[role="tab"]');
+        const tabs = f.nativeElement.querySelectorAll('button[role="tab"]');
         expect(tabs[0].getAttribute('aria-label')).toBe('Information');
         expect(tabs[1].hasAttribute('aria-label')).toBe(false);
         expect(tabs[1].textContent.trim()).toBe('Properties');
+        expect(tabs[0].parentElement.getAttribute('data-tests-id')).toBe('info-tab');
+        expect(tabs[0].hasAttribute('data-tests-id')).toBe(false);
     });
 });
