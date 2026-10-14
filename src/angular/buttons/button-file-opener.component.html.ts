@@ -4,6 +4,7 @@ export const template = `
      >
     {{ text }}
     <onap-file-opener 
+      [ariaLabel]="text"
       [extensions]="extensions"
        [disabled]="disabled" 
        [testId]="testId"

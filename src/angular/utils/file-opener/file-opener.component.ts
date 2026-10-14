@@ -14,6 +14,7 @@ export class FileObject {
                     [attr.data-tests-id]="'file' + testId"
                     [accept]="allowedExtensions"
                     [disabled]="disabled"
+                    [attr.aria-label]="ariaLabel || null"
                     (change)="onFileSelect($event)"
   />`
 })
@@ -23,6 +24,7 @@ export class FileOpenerComponent implements AfterViewInit {
   @Input() public disabled: boolean;
   @Input() public testId: boolean;
   @Input() public convertToBase64: boolean;
+  @Input() public ariaLabel: string;
   @Output() public fileUpload: EventEmitter<any>;
   @HostBinding('class.file-opener') true;
 

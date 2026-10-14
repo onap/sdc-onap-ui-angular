@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, HostBinding } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChanges, HostBinding, HostListener, ElementRef } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Mode, Size, BackgroundShape, BackgroundColor } from "../common/enums";
 import { iconsMap } from 'onap-ui-common';
@@ -20,16 +20,48 @@ export class SvgIconComponent implements OnChanges {
     @Input() public clickable: boolean;
     @Input() public className: any;
     @Input() public testId: string;
+    @Input() public ariaLabel: string;
 
     public svgIconContent: string;
     public svgIconContentSafeHtml: SafeHtml;
     public svgIconCustomClassName: string;
     public classes: string;
 
-    constructor(protected domSanitizer: DomSanitizer) {
+    constructor(protected domSanitizer: DomSanitizer, protected hostEl: ElementRef) {
         this.size = Size.medium;
         this.disabled = false;
         this.type = this.type || "common";
+    }
+
+    @HostBinding('attr.role') get hostRole(): string {
+        return this.isKeyboardButton() ? 'button' : null;
+    }
+
+    @HostBinding('attr.tabindex') get hostTabindex(): string {
+        return this.isKeyboardButton() ? (this.disabled ? '-1' : '0') : null;
+    }
+
+    @HostBinding('attr.aria-disabled') get hostAriaDisabled(): string {
+        return this.isKeyboardButton() && this.disabled ? 'true' : null;
+    }
+
+    @HostBinding('attr.aria-label') get hostAriaLabel(): string {
+        return this.isKeyboardButton() && this.ariaLabel ? this.ariaLabel : null;
+    }
+
+    @HostBinding('attr.aria-hidden') get hostAriaHidden(): string {
+        return this.isDecorative() ? 'true' : null;
+    }
+
+    @HostListener('keydown', ['$event'])
+    public onHostKeydown(event: KeyboardEvent): void {
+        if (!this.isKeyboardButton() || this.disabled || event.repeat || event.target !== this.hostEl.nativeElement) {
+            return;
+        }
+        if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+            event.preventDefault();
+            this.hostEl.nativeElement.click();
+        }
     }
 
     static Icons(): { [key: string]: string } {
@@ -39,6 +71,14 @@ export class SvgIconComponent implements OnChanges {
     public ngOnChanges(changes: SimpleChanges) {
         this.updateSvgIconByName();
         this.buildClasses();
+    }
+
+    protected isKeyboardButton(): boolean {
+        return !!this.clickable;
+    }
+
+    protected isDecorative(): boolean {
+        return !this.clickable;
     }
 
     protected updateSvgIconByName() {

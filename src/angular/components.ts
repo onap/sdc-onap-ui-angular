@@ -79,6 +79,9 @@ export { SearchBarComponent } from './search/search-bar.component';
 // Tooltip
 export { TooltipDirective } from "./tooltip/tooltip.directive";
 
+// Keyboard
+export { SdcKeyboardClickDirective } from "./utils/keyboard-click.directive";
+
 
 // Files
 export { FileUploadComponent } from "./file-upload/file-upload.component";
