@@ -20,6 +20,9 @@ export class TabsComponent implements AfterContentInit {
     @Output() public selectedTab: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
 
     public selectTab(tab: TabComponent) {
+        if (tab.disabled) {
+            return;
+        }
         this.selectedTab.emit(tab);
         // deactivate all tabs
         this.tabs.toArray().forEach((_tab: TabComponent) => {
@@ -32,6 +35,51 @@ export class TabsComponent implements AfterContentInit {
         tab.titleIconMode = Mode.primary;
     }
 
+    public onTabKeydown(event: KeyboardEvent, index: number): void {
+        if (event.altKey || event.ctrlKey || event.metaKey) {
+            return;
+        }
+        const list = this.tabs.toArray();
+        const prev = this.isVertical ? 'ArrowUp' : 'ArrowLeft';
+        const next = this.isVertical ? 'ArrowDown' : 'ArrowRight';
+        let target = -1;
+        if (event.key === next) {
+            target = this.nextEnabled(list, index, 1);
+        } else if (event.key === prev) {
+            target = this.nextEnabled(list, index, -1);
+        } else if (event.key === 'Home') {
+            target = this.nextEnabled(list, -1, 1);
+        } else if (event.key === 'End') {
+            target = this.nextEnabled(list, list.length, -1);
+        } else if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+            event.preventDefault();
+            if (!event.repeat) {
+                this.selectTab(list[index]);
+            }
+            return;
+        }
+        if (target < 0) {
+            return;
+        }
+        event.preventDefault();
+        this.selectTab(list[target]);
+        // A tab panel can project another sdc-tabs, so only this list's own items count.
+        const items = (event.currentTarget as HTMLElement).parentElement.children;
+        const item = items[target] as HTMLElement;
+        setTimeout(() => item.focus());
+    }
+
+    private nextEnabled(list: TabComponent[], from: number, step: number): number {
+        const n = list.length;
+        for (let i = 1; i <= n; i++) {
+            const candidate = (((from + step * i) % n) + n) % n;
+            if (!list[candidate].disabled) {
+                return candidate;
+            }
+        }
+        return -1;
+    }
+
   public ngOnInit() {
     this.verticalClass = this.isVertical;
   }
@@ -40,9 +88,12 @@ export class TabsComponent implements AfterContentInit {
         // get all active tabs
         const activeTabs = this.tabs.filter((tab) => tab.active);
 
-        // if there is no active tab set, activate the first
+        // if there is no active tab set, activate the first enabled one
         if (activeTabs.length === 0) {
-            this.selectTab(this.tabs.first);
+            const firstEnabled = this.tabs.find((tab) => !tab.disabled);
+            if (firstEnabled) {
+                this.selectTab(firstEnabled);
+            }
         }
     }
 }

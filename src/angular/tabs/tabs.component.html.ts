@@ -1,6 +1,10 @@
 export const template = `
-<ul class="sdc-tabs-list" role="tablist" [attr.data-tests-id]="testId">
-    <li *ngFor="let tab of tabs" class="{{tabStyle}}" role="tab" (click)="selectTab(tab)" [class.sdc-tab-active]="tab.active"
+<ul class="sdc-tabs-list" role="tablist" [attr.aria-orientation]="isVertical ? 'vertical' : 'horizontal'" [attr.data-tests-id]="testId">
+    <li *ngFor="let tab of tabs; let i = index" class="{{tabStyle}}" role="tab"
+      [attr.id]="tab.tabId" [attr.aria-controls]="tab.panelId"
+      [attr.aria-selected]="!!tab.active" [attr.tabindex]="tab.active ? 0 : -1"
+      [attr.disabled]="tab.disabled ? '' : null" [attr.aria-disabled]="tab.disabled ? 'true' : null"
+      (click)="selectTab(tab)" (keydown)="onTabKeydown($event, i)" [class.sdc-tab-active]="tab.active"
       sdc-tooltip [tooltip-text]="tab.tooltipText" [tooltip-placement]="3" [attr.data-tests-id]="tab.testId">
      <span class="tab-container">
      <svg-icon-label [ngClass]="{'tab-icon' : tab.title}"
