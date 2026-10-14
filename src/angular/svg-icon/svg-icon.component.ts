@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, HostBinding, HostListener, ElementRef } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, HostBinding, HostListener, ElementRef } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Mode, Size, BackgroundShape, BackgroundColor } from "../common/enums";
 import { iconsMap } from 'onap-ui-common';
@@ -8,7 +8,7 @@ import { template } from './svg-icon.component.html';
     selector: 'svg-icon',
     template: template
 })
-export class SvgIconComponent implements OnChanges {
+export class SvgIconComponent implements OnChanges, OnInit, OnDestroy {
 
     @Input() public name: string;
     @Input() public type: string;
@@ -62,6 +62,23 @@ export class SvgIconComponent implements OnChanges {
             event.preventDefault();
             this.hostEl.nativeElement.click();
         }
+    }
+
+    // Capture phase on the host rather than a HostListener: Angular dispatches a component's host
+    // listener and the consumer's (click) from one DOM listener, so a HostListener cannot cancel it.
+    private blockDisabledClick = (event: MouseEvent): void => {
+        if (this.isKeyboardButton() && this.disabled) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+        }
+    }
+
+    public ngOnInit(): void {
+        this.hostEl.nativeElement.addEventListener('click', this.blockDisabledClick, true);
+    }
+
+    public ngOnDestroy(): void {
+        this.hostEl.nativeElement.removeEventListener('click', this.blockDisabledClick, true);
     }
 
     static Icons(): { [key: string]: string } {

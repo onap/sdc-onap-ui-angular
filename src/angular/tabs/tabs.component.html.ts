@@ -2,6 +2,7 @@ export const template = `
 <ul class="sdc-tabs-list" role="tablist" [attr.aria-orientation]="isVertical ? 'vertical' : 'horizontal'" [attr.data-tests-id]="testId">
     <li *ngFor="let tab of tabs; let i = index" class="{{tabStyle}}" role="tab"
       [attr.id]="tab.tabId" [attr.aria-controls]="tab.panelId"
+      [attr.aria-label]="tab.title ? null : (tab.tooltipText || null)"
       [attr.aria-selected]="!!tab.active" [attr.tabindex]="tab.active ? 0 : -1"
       [attr.disabled]="tab.disabled ? '' : null" [attr.aria-disabled]="tab.disabled ? 'true' : null"
       (click)="selectTab(tab)" (keydown)="onTabKeydown($event, i)" [class.sdc-tab-active]="tab.active"

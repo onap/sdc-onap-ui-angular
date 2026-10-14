@@ -7,6 +7,7 @@ export const template = `
             [ngClass]="{'error': (!valid && dirty), 'disabled':disabled, 'isViewMode': isViewMode}"
             [attr.id]="inputId"
             [attr.aria-labelledby]="label ? labelId : null"
+            [attr.aria-label]="!label && ariaLabel ? ariaLabel : null"
             [attr.name]="name ? name : null"
             [placeholder]="placeHolder || ''"
             [(ngModel)]="value"

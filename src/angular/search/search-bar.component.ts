@@ -10,6 +10,8 @@ import {debug} from "util";
 export class SearchBarComponent extends SearchBaseComponent {
 
    @HostBinding('class') classes = 'sdc-search-bar';
+   @Input() public ariaLabel: string;
+   @Input() public searchButtonAriaLabel: string = 'Search';
    @Output('onSearchClicked') public onSearchClicked: EventEmitter<any> = new EventEmitter<any>();
 
     public searchButtonClick = (): void => {

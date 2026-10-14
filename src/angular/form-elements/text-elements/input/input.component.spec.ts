@@ -145,4 +145,17 @@ describe('Input component', () => {
         fixture.detectChanges();
         expect(input().getAttribute('aria-expanded')).toEqual('false');
     });
+
+    it('names an unlabelled input with ariaLabel', () => {
+        component.ariaLabel = 'Search';
+        fixture.detectChanges();
+        expect(input().getAttribute('aria-label')).toEqual('Search');
+    });
+
+    it('prefers the visible label over ariaLabel', () => {
+        component.label = 'Artifact Type';
+        component.ariaLabel = 'Search';
+        fixture.detectChanges();
+        expect(input().hasAttribute('aria-label')).toEqual(false);
+    });
 });

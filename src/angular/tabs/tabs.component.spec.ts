@@ -242,3 +242,22 @@ describe('TabsComponent disabled tabs', () => {
         expect(tabs().map((t) => t.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true']);
     });
 });
+
+@Component({ template: `
+    <sdc-tabs>
+        <sdc-tab titleIcon="info-circle" tooltipText="Information"></sdc-tab>
+        <sdc-tab title="Properties" tooltipText="Edit properties"></sdc-tab>
+    </sdc-tabs>` })
+class IconTabsHostComponent {}
+
+describe('TabsComponent accessible names', () => {
+    it('names an icon-only tab after its tooltip and leaves a titled tab to its text', () => {
+        TestBed.configureTestingModule({ imports: [TabsModule], declarations: [IconTabsHostComponent] });
+        const f = TestBed.createComponent(IconTabsHostComponent);
+        f.detectChanges();
+        const tabs = f.nativeElement.querySelectorAll('li[role="tab"]');
+        expect(tabs[0].getAttribute('aria-label')).toBe('Information');
+        expect(tabs[1].hasAttribute('aria-label')).toBe(false);
+        expect(tabs[1].textContent.trim()).toBe('Properties');
+    });
+});

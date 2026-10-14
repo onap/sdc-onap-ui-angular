@@ -89,3 +89,41 @@ describe('SvgIconComponent accessibility', () => {
         expect(f.componentInstance.added).toBe(1);
     });
 });
+
+@Component({ template: `
+    <span id="wrap" (click)="outer = outer + 1">
+        <svg-icon id="x" name="trash-o" [clickable]="true" [disabled]="off" ariaLabel="Delete" (click)="n = n + 1"></svg-icon>
+    </span>
+    <svg-icon-label id="y" name="plus" [clickable]="true" [disabled]="true" label="Add" (click)="n = n + 1"></svg-icon-label>` })
+class DisabledHostComponent { n = 0; outer = 0; off = true; }
+
+describe('SvgIconComponent disabled mouse clicks', () => {
+    let f: ComponentFixture<DisabledHostComponent>;
+    // Click the rendered icon, which is what a mouse hits: jsdom 11 runs listeners at the target in
+    // registration order, so a click dispatched on the host itself reaches the consumer handler first.
+    const icon = (id: string) => f.nativeElement.querySelector('#' + id + ' .svg-icon') as HTMLElement;
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [SvgIconModule], declarations: [DisabledHostComponent] });
+        f = TestBed.createComponent(DisabledHostComponent);
+        f.detectChanges();
+    });
+
+    it('a disabled clickable icon swallows the click before the consumer and its ancestors see it', () => {
+        icon('x').click();
+        expect(f.componentInstance.n).toBe(0);
+        expect(f.componentInstance.outer).toBe(0);
+    });
+
+    it('a disabled clickable label swallows the click', () => {
+        icon('y').click();
+        expect(f.componentInstance.n).toBe(0);
+    });
+
+    it('a re-enabled icon passes clicks through again', () => {
+        f.componentInstance.off = false;
+        f.detectChanges();
+        icon('x').click();
+        expect(f.componentInstance.n).toBe(1);
+        expect(f.componentInstance.outer).toBe(1);
+    });
+});

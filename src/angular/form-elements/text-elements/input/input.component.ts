@@ -23,6 +23,7 @@ export class InputComponent extends BaseTextElementComponent {
     @Input() public ariaExpanded: boolean;
     @Input() public ariaControls: string;
     @Input() public ariaActiveDescendant: string;
+    @Input() public ariaLabel: string;
 
     // For wrappers with their own (click) handler on this host (sdc-dropdown, sdc-combo-box): view
     // mode then renders readonly instead of disabled, which dispatches no clicks and takes no focus.
