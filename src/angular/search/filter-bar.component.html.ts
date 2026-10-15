@@ -4,6 +4,7 @@ export const filterBarTemplate = `
                  [label]="label"
                  [size]="size"
                  [placeHolder]="placeHolder"
+                 [ariaLabel]="ariaLabel || placeHolder"
                  [debounceTime]="debounceTime"
                  [(value)]="value"
                  [righIconName]="(value && !disabled) ? 'close': defaultRightIcon"

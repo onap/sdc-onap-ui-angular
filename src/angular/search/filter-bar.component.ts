@@ -10,6 +10,7 @@ export class FilterBarComponent extends SearchBaseComponent{
     @Output('rightIconClicked') public rightIconClickedEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Input() defaultRightIcon: string = 'search-o';
     @Input() disabled: boolean;
+    @Input() public ariaLabel: string;
 
     onRightIconClicked() {
         (this.value && !this.disabled) ? this.clearSearchQuery() : this.rightIconClickedEmitter.emit();
