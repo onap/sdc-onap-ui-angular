@@ -11,4 +11,5 @@ export const template = `
         <div class="sdc-loader {{ size }}"></div>
     </div>
 </div>
+<span class="sdc-loader-status" role="status" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">{{ active ? loadingText : '' }}</span>
 `;

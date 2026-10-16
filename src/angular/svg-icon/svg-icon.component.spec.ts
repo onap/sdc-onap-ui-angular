@@ -57,6 +57,7 @@ describe('SvgIconComponent accessibility', () => {
         expect(icon.classList.contains('clickable')).toBe(true);
         expect(icon.hasAttribute('data-tests-id')).toBe(false);
         expect(icon.querySelector('svg')).not.toBeNull();
+        expect(icon.getAttribute('aria-hidden')).toBe('true');
         hostAttrs.forEach(a => expect(el('c').hasAttribute(a)).toBe(false));
         expect(el('c').hasAttribute('aria-hidden')).toBe(false);
     });

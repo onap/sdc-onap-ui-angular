@@ -19,6 +19,7 @@ export class LoaderComponent implements OnInit, OnDestroy {
     @Input() global?: boolean; // If is relative is set to true, loader will appear over parent element. Otherwise, will be fixed over the entire page.
     @Input() name?: string;
     @Input() testId: string;
+    @Input() loadingText: string = 'Loading';
     @Input() relative: boolean; // If is relative is set to true, loader will appear over parent element. Otherwise, will be fixed over the entire page.
     @Output() activeChange: EventEmitter<number> = new EventEmitter<number>();
     private offset : {

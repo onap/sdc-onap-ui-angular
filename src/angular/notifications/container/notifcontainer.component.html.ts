@@ -1,5 +1,5 @@
 export const template = `
-<div id="containerid" class="sdc-notification-container ntns">
+<div id="containerid" class="sdc-notification-container ntns" aria-live="polite" aria-relevant="additions">
         <sdc-notification  *ngFor="let notif of notifications" [notificationSetting]="notif" (destroyComponent)="onDestroyed(notif)" >
         </sdc-notification>
 </div>
