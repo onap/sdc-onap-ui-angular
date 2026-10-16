@@ -1,12 +1,13 @@
 export const template = `
 <div class="modal-background" [@toggleBackground]="modalVisible" ></div>
-<div class="sdc-modal {{size}}">
+<div class="sdc-modal {{size}}" role="dialog" aria-modal="true" tabindex="-1" [attr.aria-labelledby]="title ? titleId : null"
+     (keydown)="onKeydown($event)" #modalRoot>
     <div class="sdc-modal__wrapper sdc-modal-type-{{type}}" [@toggleModal]="modalVisible" (@toggleModal.done)="modalToggled($event)">
 
         <div class="sdc-modal__header sdc-{{type}}__header">
             <div class="sdc-modal__icon" *ngIf="type!='custom'" [innerHtml]="svgIconContentSafeHtml"></div>
 
-            <div *ngIf="title" class="title" >
+            <div *ngIf="title" class="title" [attr.id]="titleId">
             {{ title }}
             <svg-icon
               *ngIf="titleIcon"

@@ -6,8 +6,11 @@ import {
   ComponentRef,
   Renderer,
   OnInit,
+  AfterViewInit,
+  OnDestroy,
   Output,
-  EventEmitter
+  EventEmitter,
+  ElementRef
 } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ModalButtonComponent } from './modal-button.component';
@@ -16,6 +19,11 @@ import { IModalButtonComponent, ModalType, TitleIconDetails } from './models/mod
 import { template } from './modal.component.html';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Size, Mode } from '../common/enums';
+
+let nextModalId = 0;
+
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+    'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 @Component({
     selector: 'sdc-modal',
@@ -32,7 +40,7 @@ import { Size, Mode } from '../common/enums';
     ]
 })
 
-export class ModalComponent implements OnInit {
+export class ModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @Input() size: string; 'xl|l|md|sm|xsm';
     @Input() title: string;
@@ -51,7 +59,11 @@ export class ModalComponent implements OnInit {
         this.modalCloseButton = _modalCloseButton;
     }
 
+    @ViewChild('modalRoot') modalRoot: ElementRef;
+
     modalVisible: boolean;
+    public titleId = 'sdc-modal-title-' + nextModalId++;
+    private previouslyFocused: Element;
     // Allows for custom component as body instead of simple message.
     @ViewChild('dynamicContentContainer', { read: ViewContainerRef }) dynamicContentContainer: ViewContainerRef;
     innerModalContent: ComponentRef<any>;
@@ -91,6 +103,7 @@ export class ModalComponent implements OnInit {
     constructor(private renderer: Renderer,
         private domSanitizer: DomSanitizer) {
         this.modalVisible = true;
+        this.previouslyFocused = document.activeElement;
     }
 
     ngOnInit() {
@@ -112,6 +125,69 @@ export class ModalComponent implements OnInit {
                 this.svgIconContentSafeHtml = this.domSanitizer.bypassSecurityTrustHtml(this.noSvg);
         }
 
+    }
+
+    ngAfterViewInit() {
+        const first = this.focusableElements()[0];
+        (first || this.modalRoot.nativeElement).focus();
+    }
+
+    ngOnDestroy() {
+        // A modal opened while this one was closing owns the focus by now; leave it there.
+        const active = document.activeElement;
+        const focusIsOurs = !active || active === document.body || this.modalRoot.nativeElement.contains(active);
+        if (focusIsOurs && this.previouslyFocused instanceof HTMLElement && document.body.contains(this.previouslyFocused)) {
+            this.restoreFocus(this.previouslyFocused);
+        }
+    }
+
+    // An opener hidden while the modal was open cannot take focus back; its nearest focusable
+    // ancestor keeps the user in place instead of dropping focus on the body.
+    private restoreFocus(element: HTMLElement): void {
+        let target: HTMLElement = element;
+        while (target) {
+            target.focus();
+            if (document.activeElement === target) {
+                return;
+            }
+            target = target.parentElement && target.parentElement.closest(FOCUSABLE) as HTMLElement;
+        }
+    }
+
+    public onKeydown = (event: KeyboardEvent): void => {
+        if (event.defaultPrevented) { return; }
+        if (event.key === 'Escape' || event.key === 'Esc') {
+            if (!(this.modalCloseButton && this.modalCloseButton.disabled)) {
+                event.preventDefault();
+                this.closeModal('close');
+            }
+        } else if (event.key === 'Tab') {
+            this.keepFocusInside(event);
+        }
+    }
+
+    private keepFocusInside(event: KeyboardEvent): void {
+        const focusable = this.focusableElements();
+        if (!focusable.length) {
+            event.preventDefault();
+            return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const index = focusable.indexOf(document.activeElement as HTMLElement);
+        if (event.shiftKey && (index <= 0)) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && (index === -1 || index === focusable.length - 1)) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+
+    private focusableElements(): HTMLElement[] {
+        const all: HTMLElement[] = Array.prototype.slice.call(this.modalRoot.nativeElement.querySelectorAll(FOCUSABLE));
+        return all.filter((el: any) => typeof el.checkVisibility !== 'function' ||
+            el.checkVisibility({ checkVisibilityCSS: true, visibilityProperty: true }));
     }
 
     public modalToggled = (toggleEvent: any) => {
