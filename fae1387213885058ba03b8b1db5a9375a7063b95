@@ -1,0 +1,9 @@
+Code-Review+2: Lukasz Rajewski <lukasz.rajewski@t-mobile.pl>
+Verified+1: ONAP GitHub Actions <collab-it+ecomp-jobbuilder@linuxfoundation.org>
+Verified+1: ONAP Bypass GHA <releng+onap.bypass.gha@linuxfoundation.org>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Submitted-by: Lukasz Rajewski <lukasz.rajewski@t-mobile.pl>
+Submitted-at: Sat, 17 Oct 2026 19:48:15 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/sdc/onap-ui-angular/+/148402
+Project: sdc/onap-ui-angular
+Branch: refs/heads/master
