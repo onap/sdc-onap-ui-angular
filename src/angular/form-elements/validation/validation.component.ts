@@ -7,6 +7,8 @@ import { CustomValidatorComponent } from './validators/custom.validator.componen
 import { template } from "./validation.component.html";
 import { LengthValidatorComponent } from "./validators/length.validator.component";
 
+let nextValidationId = 0;
+
 @Component({
     selector: 'sdc-validation',
     template
@@ -18,6 +20,9 @@ export class ValidationComponent implements AfterContentInit {
     @Input() public testId: string;
     @Output() public validityChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
     @HostBinding('class') classes;
+    @HostBinding('attr.id') public id: string = `sdc-validation-${nextValidationId++}`;
+    // Messages appear while the user types; a polite region reads them without moving focus.
+    @HostBinding('attr.aria-live') public ariaLive: string = 'polite';
 
     // @ContentChildren does not recieve type any or IValidator or ValidatorComponent, so need to create @ContentChildren for each validator type.
     @ContentChildren(RegexValidatorComponent) public regexValidator: QueryList<ValidatorComponent>;
@@ -40,6 +45,7 @@ export class ValidationComponent implements AfterContentInit {
             this.customValidator
         ];
 
+        this.validateElement.describedBy = this.id;
         this.validateElement.notifier.subscribe(
             (value) => {
                 const validationResult = this.validateOnChange(value);

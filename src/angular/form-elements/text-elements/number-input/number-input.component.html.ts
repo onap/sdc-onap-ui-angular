@@ -1,10 +1,14 @@
 export const template = `
 <div class="sdc-input sdc-number-input">
-    <label class="sdc-input__label" *ngIf="label" [ngClass]="{'required':required}">{{label}}</label>
+    <label class="sdc-input__label" *ngIf="label" [attr.for]="inputId" [ngClass]="{'required':required}">{{label}}</label>
     <div class="sdc-input-wrapper">
         <input
             class="sdc-input__input sdc-input__number-input {{classNames}} {{size}}"
             [ngClass]="{'error': (!valid && dirty), 'disabled':disabled}"
+            [attr.id]="inputId"
+            [attr.aria-required]="required ? 'true' : null"
+            [attr.aria-invalid]="hasError() ? 'true' : null"
+            [attr.aria-describedby]="hasError() && describedBy ? describedBy : null"
             [attr.name]="name ? name : null"
             [placeholder]="placeHolder || ''"
             [(ngModel)]="value"
@@ -20,8 +24,8 @@ export const template = `
             [attr.data-tests-id]="testId"
         />
         <div class="sdc-input__spinner-buttons" *ngIf="!(disabled || isViewMode)">
-            <svg-icon name="caret1-up-o" mode="secondary" (click)="clickUp()" [clickable]="true" size="small" [testId]="testId +'-up-icon'"></svg-icon>
-            <svg-icon name="caret1-down-o" mode="secondary" (click)="clickDown()" [clickable]="true" size="small" [testId]="testId +'-down-icon'"></svg-icon>
+            <svg-icon name="caret1-up-o" mode="secondary" (click)="clickUp()" [clickable]="true" ariaLabel="Increase" size="small" [testId]="testId +'-up-icon'"></svg-icon>
+            <svg-icon name="caret1-down-o" mode="secondary" (click)="clickDown()" [clickable]="true" ariaLabel="Decrease" size="small" [testId]="testId +'-down-icon'"></svg-icon>
         </div>
     </div>
 </div>

@@ -20,6 +20,7 @@ export class BaseTextElementComponent extends ValidatableComponent implements On
     @Input() public size:  Size;
     @Input() public testId: string;
     @Input() public isViewMode: boolean;
+    @Input() public describedBy: string;
 
     public control: FormControl;
 
@@ -36,6 +37,10 @@ export class BaseTextElementComponent extends ValidatableComponent implements On
             .subscribe((newValue: any) => {
                 this.baseEmitter.emit(this.value);
             });
+    }
+
+    public hasError(): boolean {
+        return !this.valid && this.dirty;
     }
 
     public getValue(): any {

@@ -5,6 +5,7 @@ export const template = `
               [disabled]="disabled"
               [value]="this.selectedOption.label"
               [required]="required"
+              [describedBy]="describedBy"
               [size]="size"
               [isViewMode]="true"
               [focusableInViewMode]="true"

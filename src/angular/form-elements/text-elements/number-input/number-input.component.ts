@@ -4,6 +4,8 @@ import { BaseTextElementComponent } from "../base-text-element.component";
 import {RegexPatterns} from "../../../common/enums";
 import {isFirefox, isIEOrEdge} from "../../../utils/browser-utils";
 
+let nextNumberInputId = 0;
+
 @Component({
     selector: 'sdc-number-input',
     template: template,
@@ -12,6 +14,7 @@ export class NumberInputComponent extends BaseTextElementComponent {
     @Input() public maxValue:number;
     @Input() public minValue: number;
     @Input() public step: number = 1;
+    public inputId: string = `sdc-number-input-${nextNumberInputId++}`;
 
 
 

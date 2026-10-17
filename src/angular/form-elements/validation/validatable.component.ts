@@ -7,6 +7,8 @@ export abstract class ValidatableComponent implements IValidatableComponent {
     public valid: boolean;
     public dirty: boolean;
     public validationActive: boolean;
+    // Id of the sdc-validation holding this component's messages; set by that ValidationComponent.
+    public describedBy: string;
 
     // Each ValidatableComponent will notify when the value is changed.
     public notifier: Subject<string>;
