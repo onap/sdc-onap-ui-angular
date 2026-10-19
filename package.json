@@ -1,6 +1,6 @@
 {
   "name": "onap-ui-angular",
-  "version": "5.9.0",
+  "version": "5.10.0",
   "author": "d2",
   "private": false,
   "main": "dist/index.umd.js",
@@ -69,7 +69,7 @@
     "@angular/core": "^6.0.3",
     "@angular/forms": "^6.0.3",
     "@angular/platform-browser": "^6.0.3",
-    "onap-ui-common": "^1.1.0",
+    "onap-ui-common": "^1.4.0",
     "rxjs": "^6.2.0",
     "zone.js": "^0.8.26"
   },

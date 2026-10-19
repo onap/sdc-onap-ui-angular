@@ -48,6 +48,8 @@ export enum Mode {
 export enum ButtonType {
     primary = 'primary',
     secondary = 'secondary',
+    tertiary = 'tertiary',
+    link = 'link',
     success = 'success',
     error = 'error',
     warning = 'warning',

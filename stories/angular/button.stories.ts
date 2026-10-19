@@ -9,7 +9,7 @@ import { withNotes } from '@storybook/addon-notes';
 import {ButtonsModule} from "../../src/angular/buttons/buttons.module";
 
 const iconMode = ['primary', 'secondary', 'success', 'error', 'warning', 'info', 'white']
-const buttonTypes = ['primary', 'secondary', 'link', 'success', 'error', 'warning', 'info'];
+const buttonTypes = ['primary', 'secondary', 'tertiary', 'link', 'success', 'error', 'warning', 'info'];
 const buttonSizes = ['large', 'medium', 'small', 'x-small', 'default'];
 const positions = ['right', 'left'];
 const iconsNames = ['settings-o', 'plus-circle-o', 'plus-circle', 'caret2-right-circle-o'];
