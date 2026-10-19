@@ -1,7 +1,10 @@
 export const template = `
-<button class="sdc-button sdc-button__{{ type }} btn-{{ size }} {{ iconPositionClass }}" 
- [disabled] = "disabled || show_spinner"
-        [attr.data-tests-id]="testId">
+<button type="button" class="sdc-button sdc-button__{{ type }} btn-{{ size }} {{ iconPositionClass }}" 
+ [disabled] = "(disabled || show_spinner) && !isExplainedDisabled()"
+        [attr.aria-disabled]="isExplainedDisabled() ? 'true' : null"
+        [attr.title]="isExplainedDisabled() ? disabledReason : null"
+        [attr.data-tests-id]="testId"
+        (click)="onInnerClick($event)">
         <svg-icon
                 *ngIf="icon_name"
                 [name]="icon_name"

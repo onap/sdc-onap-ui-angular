@@ -20,6 +20,7 @@ export class ButtonComponent implements OnInit, IButtonComponent {
     @Input() public show_spinner: boolean;
     @Input() public spinner_position: Placement;
     @Input() public testId: string;
+    @Input() public disabledReason: string;
 
     public placement = Placement;
     private lastClick: Date;
@@ -44,6 +45,19 @@ export class ButtonComponent implements OnInit, IButtonComponent {
             e.stopPropagation();
         }
         this.lastClick = now;
+    }
+
+    public isExplainedDisabled(): boolean {
+        return !!(this.disabled && this.disabledReason && !this.show_spinner);
+    }
+
+    // Consumers bind (click) on the sdc-button host, so a click on an aria-disabled button must not
+    // bubble up to it the way a click on a natively disabled one never does.
+    public onInnerClick(e): void {
+        if (this.isExplainedDisabled()) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
     }
 
     public disableButton = () => {

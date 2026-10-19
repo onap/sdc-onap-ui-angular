@@ -23,6 +23,7 @@ const storiesNames = {
   typesButtons: 'Button ',
   withIcon: 'Button with icon',
   withSpinner: 'Button with spinner',
+  withDisabledReason: 'Disabled button with a reason',
   buttonFileOpener: 'Button file opener'
 }
 
@@ -200,6 +201,37 @@ stories.add(storiesNames.withSpinner, () => {
       `
     };
   });
+
+
+stories.add(storiesNames.withDisabledReason, () => {
+
+  const _text = text('text', 'Add Property');
+  const _type = select('type', buttonTypes, 'tertiary', '');
+  const _disabled = boolean('disabled', true);
+  const _disabledReason = text('disabledReason', 'Check out the asset to add properties');
+
+  return {
+    props: {
+      buttonClick: action('Button was clicked'),
+      _text, _type, _disabled, _disabledReason
+    },
+    template: `
+      <sdc-button
+          [text]="_text"
+          [type]="_type"
+          [icon_name]="'plus'"
+          [icon_position]="'left'"
+          [disabled]="_disabled"
+          [disabledReason]="_disabledReason"
+          (click)="buttonClick()"
+          >
+        </sdc-button>
+      `
+    };
+  },
+  { notes: `<h2>Disabled button with a reason</h2>
+  With disabledReason set, a disabled button stays focusable (aria-disabled), shows the reason as its title and ignores clicks.
+  Without it, a disabled button is natively disabled.` });
 
 
 stories.add(storiesNames.buttonFileOpener, () => {

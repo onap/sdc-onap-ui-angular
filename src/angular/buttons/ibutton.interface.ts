@@ -11,4 +11,5 @@ export interface IButtonComponent {
     show_spinner?: boolean;
     spinner_position?: Placement;
     size?: string;
+    disabledReason?: string;
 }
