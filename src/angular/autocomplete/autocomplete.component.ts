@@ -120,7 +120,7 @@ export class AutoCompleteComponent implements OnInit, OnDestroy {
     private fetchRemoteData(query: string): Observable<any[]> {
         const params = {'searchQuery': query};
         return this.http.get<any[]>(this.dataUrl, {params: params})
-            .pipe(catchError<any[], any[]>(() => of([])));
+            .pipe(catchError<any[], Observable<any[]>>(() => of([]))) as Observable<any[]>;
     }
 
     public onRightItemClicked() {

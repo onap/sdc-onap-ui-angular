@@ -10,6 +10,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/onap-ui-angular",
+            "tsConfig": ".storybook/tsconfig.json",
             "styles": [
               "node_modules/onap-ui-common/lib/style.css",
               "src/assets/styles/style.scss"

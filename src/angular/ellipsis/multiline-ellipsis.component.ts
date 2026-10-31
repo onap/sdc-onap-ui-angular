@@ -16,8 +16,8 @@ export class MultilineEllipsisComponent implements OnInit, AfterViewInit {
 	@Input() public testId: string;
 	@Output() public hasEllipsisChanged: EventEmitter<boolean>;
 
-	@ViewChild('multilineEllipsisContainer') public elmContainer: ElementRef;
-	@ViewChild('multilineEllipsisContent') public elmContent: ElementRef;
+	@ViewChild('multilineEllipsisContainer', { static: true }) public elmContainer: ElementRef;
+	@ViewChild('multilineEllipsisContent', { static: false }) public elmContent: ElementRef;
 
 	public stylesContainer: { [key: string]: string };
 	public stylesContent: { [key: string]: string };

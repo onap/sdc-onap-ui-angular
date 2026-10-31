@@ -35,7 +35,7 @@ export class ComboBoxComponent extends SearchBaseComponent implements OnInit {
     @Input() public disabled: boolean;
     @Input() public noResultsMessage: string = 'No matches';
 
-    @ViewChild('comboBoxInput') public input: InputComponent;
+    @ViewChild('comboBoxInput', { static: false }) public input: InputComponent;
 
     // protected complexData: any[] = [];
     public autoCompleteResults: IDropDownOption[] = [];

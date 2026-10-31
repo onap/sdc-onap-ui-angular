@@ -3,7 +3,7 @@ const sass = require('sass');
 
 const storyStyles = path.resolve(__dirname, '../stories/angular/styles.scss');
 
-module.exports = baseConfig => {
+module.exports = ({ config: baseConfig }) => {
   baseConfig.module.rules.push({
     test: [/\.stories\.ts?$/, /index\.ts$/],
     loaders: [

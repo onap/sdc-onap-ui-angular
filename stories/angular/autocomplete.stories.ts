@@ -84,7 +84,7 @@ storiesOf('AutoComplete', module)
 
     const _label = text('label', 'Complex data (Object)');
     const _placeholder = text('placeholder', 'Complex data');
-    const _data = array('*data', sampleData, ',');
+    const _data = object('*data', sampleData);
     const _dataSchema = object('dataSchema', sampleSchema);
     const _event = text('*(itemSelected)', 'Event thrown when item selected');
 

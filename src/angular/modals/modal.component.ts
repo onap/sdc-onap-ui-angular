@@ -54,18 +54,18 @@ export class ModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @Output() onClose : EventEmitter<string> =  new EventEmitter<string>();
 
-    @ViewChild('modalCloseButton')
+    @ViewChild('modalCloseButton', { static: true })
     set refCloseButton(_modalCloseButton: ModalCloseButtonComponent) {
         this.modalCloseButton = _modalCloseButton;
     }
 
-    @ViewChild('modalRoot') modalRoot: ElementRef;
+    @ViewChild('modalRoot', { static: false }) modalRoot: ElementRef;
 
     modalVisible: boolean;
     public titleId = 'sdc-modal-title-' + nextModalId++;
     private previouslyFocused: Element;
     // Allows for custom component as body instead of simple message.
-    @ViewChild('dynamicContentContainer', { read: ViewContainerRef }) dynamicContentContainer: ViewContainerRef;
+    @ViewChild('dynamicContentContainer', { read: ViewContainerRef, static: true }) dynamicContentContainer: ViewContainerRef;
     innerModalContent: ComponentRef<any>;
 
     public calculatedTestId: string;

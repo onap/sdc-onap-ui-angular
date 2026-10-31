@@ -13,7 +13,7 @@ let nextListboxId = 0;
 })
 export class DropDownComponent extends BaseTextElementComponent implements OnInit, OnChanges {
 
-    @ViewChild('dropdownInput') public dropdownInput: InputComponent;
+    @ViewChild('dropdownInput', { static: false }) public dropdownInput: InputComponent;
     @Output('changed') changeEmitter:EventEmitter<IDropDownOption> = new EventEmitter<IDropDownOption>();
     @Input() options: IDropDownOption[];
     @Input() selectedOption: IDropDownOption;

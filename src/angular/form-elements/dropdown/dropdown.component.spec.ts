@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { DropDownComponent } from './dropdown.component';
-import { IDropDownOption, DropDownTypes, DropDownOptionType } from "./dropdown-models";
+import { IDropDownOption, DropDownOptionType } from "./dropdown-models";
 import { DropdownModule } from "./dropdown.module";
 
 
@@ -43,7 +43,6 @@ describe('DropDown component', () => {
         component.label = label;
         component.placeHolder = placeHolder;
         component.options = options;
-        component.type = DropDownTypes.Regular;
         fixture.detectChanges();
     });
 

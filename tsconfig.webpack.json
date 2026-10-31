@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig-aot.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "rootDir": ".",
+    "types": ["node"]
+  },
+  "files": ["./webpack-umd.config.ts"]
+}

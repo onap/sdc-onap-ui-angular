@@ -12,15 +12,16 @@
 module.exports = {
     preset: 'jest-preset-angular',
     roots: ['<rootDir>/src/angular', '<rootDir>/stories'],
-    setupTestFrameworkScriptFile: '<rootDir>/src/angular/jest-setup.ts',
+    setupFilesAfterEnv: ['<rootDir>/src/angular/jest-setup.ts'],
     globals: {
         'ts-jest': {
-            tsConfigFile: 'src/angular/tsconfig.jest.json',
+            tsConfig: 'src/angular/tsconfig.jest.json',
+            stringifyContentPathRegex: '\\.html$',
+            babelConfig: { plugins: ['require-context-hook'] },
         },
-        '__TRANSFORM_HTML__': true,
     },
     transform: {
-        '^.+\\.(ts|js|html)$': '<rootDir>/node_modules/jest-preset-angular/preprocessor.js',
+        '^.+\\.(ts|js|html)$': 'ts-jest',
     },
     // onap-ui-common ships ES-module sources (e.g. lib/icons-map.js uses
     // `export default`). node_modules is not transformed by default, so allow

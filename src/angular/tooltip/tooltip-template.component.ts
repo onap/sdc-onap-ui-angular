@@ -10,7 +10,7 @@ import {BehaviorSubject} from "rxjs";
 })
 
 export class TooltipTemplateComponent implements AfterViewInit {
-    @ViewChild('templateContainer', {read: ViewContainerRef}) public container: ViewContainerRef;
+    @ViewChild('templateContainer', {read: ViewContainerRef, static: false}) public container: ViewContainerRef;
 
     public viewReady: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
