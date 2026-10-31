@@ -22,6 +22,7 @@
     "./src/angular/index.ts"
   ],
   "angularCompilerOptions": {
+    "enableIvy": false,
     "genDir": "dist",
     "debug": false,
     "skipTemplateCodegen": true,

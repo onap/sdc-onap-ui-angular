@@ -1,5 +1,8 @@
 {
   "extends": "../tsconfig-sitebook.json",
+  "compilerOptions": {
+    "baseUrl": ".."
+  },
   "exclude": [
     "../src/angular/**/*.spec.ts"
   ],

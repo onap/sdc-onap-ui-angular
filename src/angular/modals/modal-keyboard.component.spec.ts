@@ -19,9 +19,17 @@
  */
 
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ApplicationRef, Component, Input } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalModule } from './modal.module';
 import { ModalComponent } from './modal.component';
+import { ModalService } from './modal.service';
+import { ModalSize } from './models/modal-config';
+
+@Component({ selector: 'test-modal-content', template: '<span>{{text}}</span>' })
+class CustomModalContent {
+    @Input() text: string;
+}
 
 describe('ModalComponent keyboard and dialog semantics', () => {
     let f: ComponentFixture<ModalComponent>;
@@ -46,7 +54,12 @@ describe('ModalComponent keyboard and dialog semantics', () => {
     };
 
     beforeEach(() => {
-        TestBed.configureTestingModule({ imports: [ModalModule, NoopAnimationsModule] });
+        TestBed.overrideModule(ModalModule, {
+            add: { declarations: [CustomModalContent], entryComponents: [CustomModalContent] }
+        });
+        TestBed.configureTestingModule({
+            imports: [ModalModule, NoopAnimationsModule]
+        });
         trigger = document.createElement('button');
         trigger.textContent = 'IMPORT VSP';
         document.body.appendChild(trigger);
@@ -140,5 +153,25 @@ describe('ModalComponent keyboard and dialog semantics', () => {
         f.destroy();
         expect(document.activeElement).toBe(next);
         next.remove();
+    });
+
+    it('inserts custom modal content before the first change detection', () => {
+        open();
+        const applicationRef: ApplicationRef = TestBed.get(ApplicationRef);
+        applicationRef.components.push(f.componentRef);
+        const service: ModalService = TestBed.get(ModalService);
+        const modal = service.openCustomModal({ title: 'Custom', size: ModalSize.small, buttons: [] },
+            CustomModalContent, { text: 'Dynamic modal body' });
+        try {
+            modal.instanceRef.changeDetectorRef.detectChanges();
+            const element = modal.instanceRef.location.nativeElement as HTMLElement;
+            expect(element.querySelector('test-modal-content').textContent).toBe('Dynamic modal body');
+            expect(modal.getCloseButton()).toBeDefined();
+            modal.closeModal('close');
+            expect(modal.modalVisible).toBe(false);
+        } finally {
+            modal.instanceRef.destroy();
+            applicationRef.components.pop();
+        }
     });
 });

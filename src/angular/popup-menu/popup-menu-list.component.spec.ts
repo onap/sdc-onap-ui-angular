@@ -13,7 +13,7 @@ import { PopupMenuItemComponent } from './popup-menu-item.component';
 class PopupMenuHostComponent {
     public open: boolean = true;
     public items: string[] = ['first', 'second'];
-    @ViewChild(PopupMenuListComponent) public list: PopupMenuListComponent;
+    @ViewChild(PopupMenuListComponent, { static: false }) public list: PopupMenuListComponent;
     @ViewChildren(PopupMenuItemComponent) public menuItems: QueryList<PopupMenuItemComponent>;
 }
 

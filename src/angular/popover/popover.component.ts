@@ -26,7 +26,7 @@ export class PopoverComponent implements OnInit{
   @Output() public popoverClosed: EventEmitter<string> = new EventEmitter<string>();
 
   // Allows for custom component as body instead of simple message.
-  @ViewChild('popoverDynamicInnerContent', { read: ViewContainerRef }) popoverDynamicInnerContent: ViewContainerRef;
+  @ViewChild('popoverDynamicInnerContent', { read: ViewContainerRef, static: true }) popoverDynamicInnerContent: ViewContainerRef;
   innerPopoverContent: ComponentRef<any>;
 
 

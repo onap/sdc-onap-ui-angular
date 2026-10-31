@@ -4,7 +4,6 @@ import { withNotes } from '@storybook/addon-notes';
 import { moduleMetadata } from '@storybook/angular';
 import { FormElementsModule } from '../../src/angular/form-elements/form-elements.module';
 import { ValidationMessageComponent } from '../../src/angular/validation-message/validation-message.component';
-import { validateStyleParams } from '@angular/animations/browser/src/util';
 import { InputComponent } from '../../src/angular/components';
 
 let stories = storiesOf('Validation Message', module)

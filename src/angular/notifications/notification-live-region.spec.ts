@@ -19,10 +19,16 @@
  */
 
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { Component, Input } from '@angular/core';
 import { NotificationModule } from './notification.module';
 import { NotificationContainerComponent } from './container/notifcontainer.component';
 import { NotificationsService } from './services/notifications.service';
 import { NotificationSettings } from './utilities/notification.config';
+
+@Component({ selector: 'test-notification-content', template: '<span>{{text}}</span>' })
+class CustomNotificationContent {
+    @Input() text: string;
+}
 
 describe('Notification live region', () => {
     let f: ComponentFixture<NotificationContainerComponent>;
@@ -30,7 +36,12 @@ describe('Notification live region', () => {
     const container = () => f.nativeElement.querySelector('.sdc-notification-container') as HTMLElement;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({ imports: [NotificationModule] });
+        TestBed.overrideModule(NotificationModule, {
+            add: { declarations: [CustomNotificationContent], entryComponents: [CustomNotificationContent] }
+        });
+        TestBed.configureTestingModule({
+            imports: [NotificationModule]
+        });
         service = TestBed.get(NotificationsService);
         f = TestBed.createComponent(NotificationContainerComponent);
         f.detectChanges();
@@ -51,5 +62,12 @@ describe('Notification live region', () => {
         expect(info.hasAttribute('aria-live')).toBe(false);
         expect(error.getAttribute('aria-live')).toBe('assertive');
         expect(error.textContent).toContain('Failed');
+    });
+
+    it('renders custom content when a notification arrives after container initialization', () => {
+        service.push(new NotificationSettings('info', '', 'Custom', 10000, true, true,
+            CustomNotificationContent, { text: 'Dynamic notification body' }));
+        f.detectChanges();
+        expect(container().querySelector('test-notification-content').textContent).toBe('Dynamic notification body');
     });
 });

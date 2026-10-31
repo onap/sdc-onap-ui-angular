@@ -87,19 +87,12 @@ jobs:
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
 
-      # The build toolchain is pinned to Node 10 (npm 6), matching the
-      # gerrit-merge publish jobs so this verify build faithfully reproduces
-      # what gets published. Node 10 is the newest version whose bundled
-      # node-sass@4.9.2 still resolves a prebuilt binary (Node 12+ forces a
-      # source compile that fails, and node-sass cannot build on Node 18+),
-      # while its npm 6 honors the scoped `_auth` the publish workflow needs.
-      # node-build-action (which assumes a modern Node) is not used, and the
-      # install step below is `npm install`, not `npm ci`: package.json and the
-      # committed lockfile are out of sync, so `npm ci` would refuse to run.
+      # Match Maven and the publisher; npm 6 honors the scoped `_auth` used by
+      # the merge workflow, and Node 10 matches Angular 8's build toolchain.
       # yamllint disable-line rule:line-length
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: "10"
+          node-version: "10.24.1"
 
       - name: Install dependencies
         run: npm install
@@ -146,21 +139,13 @@ jobs:
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
 
-      # The Jest suite runs headlessly (jsdom) via jest-preset-angular and needs
-      # a modern Node, so this job pins Node 18 rather than the Node 8 used by
-      # build-nodejs. Install flags:
-      #   --ignore-scripts   skip the node-sass@4.9.2 native build (cannot
-      #                      compile on Node 18); tests do not use node-sass,
-      #                      since no component imports SCSS at module load.
-      #   --no-package-lock  ignore the committed lockfileVersion 1 lock, whose
-      #                      fsevents@1.2.4 entry is darwin-only and makes a
-      #                      modern npm fail with EBADPLATFORM on the Linux
-      #                      runner. The lock cannot be regenerated without
-      #                      breaking build-nodejs, whose Node 8 npm reads v1.
+      # Tests do not use the Angular devkit's optional native Sass dependency.
+      # Skip its install scripts on the separate Jest runtime; keep npm 6's
+      # lockfile unchanged for the build and publisher jobs.
       # yamllint disable-line rule:line-length
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: "18"
+          node-version: "18.20.8"
 
       - name: Install dependencies
         run: npm install --ignore-scripts --no-package-lock

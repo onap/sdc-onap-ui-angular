@@ -110,7 +110,7 @@ storiesOf('Form elements|Dropdown', module)
       const _options = object('options', options1);
       const _testId = text('testId', 'dropdown-test-id');
       const _required = boolean('required', false);
-      const _size = number('size', 'medium');
+    const _size = select('size', ['small', 'medium', 'large'], 'medium');
       const _selectedOption = object('selectedOption', {});
       const _onChange = text('*(onChange)', 'Event throws when dropdown changed, see in Action logger tab.');
 

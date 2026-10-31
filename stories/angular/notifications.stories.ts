@@ -29,7 +29,7 @@ let stories = storiesOf('Notification', module)
 
   function createStory(stories, title, containsTitle, containsTitleIcon, notesTitle, notesText){
     stories.add(title, () => {
-        const _type =  select('Type', ["info", "warning", "error", "success"], 'left', '');
+        const _type =  select('Type', ["info", "warning", "error", "success"], 'info', '');
         const _notifyText = text('Text','notif info message test');
         const _notifyTitle = text('Title', 'Notif Titile Info');
         const _sticky = boolean('Sticky', false);

@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/angular';
-import { withKnobs, text, number, boolean, array, select, color, date, button } from '@storybook/addon-knobs';
+import { withKnobs, text, number, boolean, array, select, color, date, button, object } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { action, configureActions } from '@storybook/addon-actions';
 import { moduleMetadata } from '@storybook/angular';
@@ -30,7 +30,7 @@ let stories = storiesOf('Tag Cloud', module)
         let _label = text('label', 'Please Enter value');
         let _list = array('List', ['aaa', 'bbb', 'ccc'], ',');
         let _isViewOnly = containsViewOnly ? boolean('View only', false) : null;
-        let _listViewOnly = containsViewOnlyList ? array('List of view only params', [0,3], ',') : null;
+        let _listViewOnly = containsViewOnlyList ? object('List of view only params', [0,3]) : null;
         let _isUniqueList = containsUniqueList ? boolean('Unique list', false) : null;
         let _uniqueErrorMessage = containsUniqueList ? text('Unique error message', 'Unique error') : null;
         let _placeholder =  text('place holder', 'Type a value and then click enter or');
