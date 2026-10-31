@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/angular';
-import { withKnobs, text, boolean, array } from '@storybook/addon-knobs';
+import { withKnobs, text, boolean, object } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { action } from '@storybook/addon-actions';
 import { moduleMetadata } from '@storybook/angular';
@@ -44,7 +44,7 @@ storiesOf('ComboBox', module)
 
     const _label = text('label', 'Simple data (Array)');
     const _placeholder = text('placeHolder', 'Find...');
-    const _data = array('data', sampleData, ',');
+    const _data = object('data', sampleData);
     const _event = text('(itemSelected)', 'Event thrown when item selected');
     const _eventClear = text('(clearInput)', 'Event thrown when input cleared');
     const _value = text('selectedValue', 'red');

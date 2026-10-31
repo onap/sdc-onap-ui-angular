@@ -57,7 +57,7 @@ mixins.scss
 You can import these files to your project and get the same color scheme and variables line onap-ui-common.
 
 
-#### Using the library in latest Angular (6)
+#### Using the library in Angular 8
 ###### Add the library to your module
 ```js
   import { SdcUiComponentsModule, SdcUiComponents } from 'onap-ui-angular';
@@ -69,7 +69,7 @@ You can import these files to your project and get the same color scheme and var
 	imports: [
 	  BrowserModule,
 	  FormsModule,
-	  HttpModule,
+	  HttpClientModule,
 	  SdcUiComponentsModule
 	],
 	providers: [
@@ -85,6 +85,44 @@ You can import these files to your project and get the same color scheme and var
 The components in this library are displayed via [storybook](https://github.com/storybooks/storybook). Head to [http://onap-sdc.github.io/onap-ui-angular](http://onap-sdc.github.io/onap-ui-angular) to see the components that are in `master`.
 
 While developing, just run `npm run storybook` in your terminal to launch a local storybook server where you can see your changes.
+
+### Compatibility and build
+
+The local 6.0.0 candidate targets Angular 8.2.14, RxJS 6.5.5 and Zone.js 0.9.1.
+It no longer declares Angular 6 or 7 compatibility. It uses the unchanged
+onap-ui-common 1.4.0 styling contract; consumers must provide that stylesheet.
+The library version is independent of the Angular framework version. This
+candidate is not a published or reserved release.
+
+The compiler is TypeScript 3.5.3. View Engine metadata emission is retained with
+`enableIvy: false`, `skipTemplateCodegen: true` and `skipMetadataEmit: false`, so
+consumer AOT builds compile the library templates. Existing public exports and
+flat `dist/<feature>/...` deep imports are retained, alongside `dist/index.js`,
+`dist/index.d.ts`, `dist/index.metadata.json` and the UMD entry points. Angular
+and RxJS remain external to the UMD bundles.
+
+Use Node 10.24.1 / npm 6.14.12 for installation, ngc, UMD, static Storybook and
+packaging, matching Maven and the build/publisher workflows. Use Node 18.20.8
+for Jest. The static gallery uses Storybook 5.3.21; tests use Jest 24.9.0 and
+jest-preset-angular 7.1.1. Sass styles are compiled with Dart Sass, not node-sass.
+The test-only installation can use `npm install --ignore-scripts --no-package-lock`
+to avoid the legacy Angular devkit's optional native Sass dependency.
+
+```sh
+npm install
+npm run build
+npm run storybook:build
+npm pack --dry-run
+npm pack
+```
+
+On the Jest runtime, run `npm test -- --ci --coverage --runInBand`. Storyshots
+continues to render the gallery through TestBed, and coverage thresholds remain
+unchanged. Static Storybook builds fail on unhandled promise rejections.
+
+Angular 8 and these Node runtimes are end-of-life. This is a migration checkpoint,
+not a supported or security-compliant platform. Consumer AOT/runtime integration
+and release-version availability must be checked before any publication.
 
 
 ### Useful guides

@@ -23,6 +23,14 @@ export default {
   },
   externals: [
     angularExternals(),
+    {
+      rxjs: {
+        root: 'Rx',
+        commonjs: 'rxjs',
+        commonjs2: 'rxjs',
+        amd: 'rxjs'
+      }
+    },
     rxjsExternals()
   ],
   devtool: 'source-map',
@@ -34,7 +42,10 @@ export default {
           {
             loader: 'ts-loader',
             options: {
-              configFile: "tsconfig-aot.json"
+              configFile: "tsconfig-aot.json",
+              compilerOptions: {
+                declaration: false
+              }
             }
           },
           {

@@ -78,7 +78,7 @@ storiesOf('Form elements|Input', module)
     const _name = text('name', 'InputName');
     const _placeHolder = text('placeHolder', 'Input placeHolder');
     const _value = text('value', 'Some value');
-    const _type = select('type', ['text', 'number', 'email']);
+    const _type = select('type', ['text', 'number', 'email'], 'text');
     const _disabled = boolean('disabled', false);
     const _required = boolean('required', false);
     const _testId = text('testId', 'input-test-id');
